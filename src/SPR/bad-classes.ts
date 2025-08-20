@@ -1,5 +1,5 @@
 // ❌ ПЛОХО: Нарушение SRP - один метод делает всё для всех фигур
-class BadShapeProcessor {
+class SprBadShapeProcessor {
     radius?: number;
     width?: number;
     height?: number;
@@ -11,7 +11,7 @@ class BadShapeProcessor {
     }
 
     // Плохой метод - делает всё для всех фигур
-    processShape(shapeType: 'circle' | 'rectangle'): void {
+    processShape(shapeType: 'circle' | 'rectangle'): {area: number, perimeter: number} {
         if (shapeType === 'circle') {
             // Валидация круга
             if (!this.radius || this.radius <= 0) {
@@ -24,6 +24,8 @@ class BadShapeProcessor {
             // Расчет периметра круга
             const perimeter = 2 * Math.PI * this.radius; 
 
+            return {area, perimeter};
+
         } else if (shapeType === 'rectangle') {
             // Валидация прямоугольника
             if (!this.width || !this.height || this.width <= 0 || this.height <= 0) {
@@ -35,13 +37,17 @@ class BadShapeProcessor {
             
             // Расчет периметра прямоугольника
             const perimeter = 2 * (this.width + this.height);
+
+            return {area, perimeter};
         }
+
+        throw new Error('Invalid shape type')
     }
 }
 
 // Использование
-const badCircle = new BadShapeProcessor(5);
-badCircle.processShape('circle');
+const sprBadCircle = new SprBadShapeProcessor(5);
+sprBadCircle.processShape('circle'); 
 
-const badRectangle = new BadShapeProcessor(undefined, 4, 6);
-badRectangle.processShape('rectangle'); 
+const sprBadRectangle = new SprBadShapeProcessor(undefined, 4, 6);
+sprBadRectangle.processShape('rectangle'); 

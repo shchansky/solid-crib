@@ -30,48 +30,22 @@ function getRectanglePerimeter(width: number, height: number): number {
     return 2 * (width + height);
 }
 
-// Сохранение круга
-function saveCircle(radius: number, area: number, perimeter: number): void {
-    console.log(`Saving circle: radius=${radius}, area=${area.toFixed(2)}, perimeter=${perimeter.toFixed(2)}`);
-}
 
-// Сохранение прямоугольника
-function saveRectangle(width: number, height: number, area: number, perimeter: number): void {
-    console.log(`Saving rectangle: width=${width}, height=${height}, area=${area}, perimeter=${perimeter}`);
-}
-
-// Отображение круга
-function showCircle(radius: number, area: number, perimeter: number): void {
-    console.log(`Circle: radius=${radius} -> Area: ${area.toFixed(2)}, Perimeter: ${perimeter.toFixed(2)}`);
-}
-
-// Отображение прямоугольника
-function showRectangle(width: number, height: number, area: number, perimeter: number): void {
-    console.log(`Rectangle: ${width}x${height} -> Area: ${area}, Perimeter: ${perimeter}`);
-}
 
 // Координатор для круга
-function processCircle(radius: number): void {
+function sprGoodProcessCircle(radius: number): {area: number, perimeter: number} {
     if (!isValidCircle(radius)) throw new Error('Invalid circle radius');
-    
-    const area = getCircleArea(radius);
-    const perimeter = getCirclePerimeter(radius);
-    
-    saveCircle(radius, area, perimeter);
-    showCircle(radius, area, perimeter);
+       
+    return {area: getCircleArea(radius), perimeter: getCirclePerimeter(radius)};
 }
 
 // Координатор для прямоугольника
-function processRectangle(width: number, height: number): void {
+function sprGoodProcessRectangle(width: number, height: number): {area: number, perimeter: number} {
     if (!isValidRectangle(width, height)) throw new Error('Invalid rectangle dimensions');
     
-    const area = getRectangleArea(width, height);
-    const perimeter = getRectanglePerimeter(width, height);
-    
-    saveRectangle(width, height, area, perimeter);
-    showRectangle(width, height, area, perimeter);
+    return {area: getRectangleArea(width, height), perimeter: getRectanglePerimeter(width, height)};
 }
 
 // Использование
-processCircle(5);
-processRectangle(4, 6);
+sprGoodProcessCircle(5);
+sprGoodProcessRectangle(4, 6);

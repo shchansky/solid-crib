@@ -1,5 +1,5 @@
 // ❌ ПЛОХО: Нарушение SRP - одна функция делает всё для всех фигур
-function badProcessShape(shapeType: 'circle' | 'rectangle', radius?: number, width?: number, height?: number): void {
+function sprBadProcessShape(shapeType: 'circle' | 'rectangle', radius?: number, width?: number, height?: number): {area: number, perimeter: number} {
     if (shapeType === 'circle') {
         // Валидация круга
         if (!radius || radius <= 0) throw new Error('Invalid circle radius');
@@ -10,11 +10,7 @@ function badProcessShape(shapeType: 'circle' | 'rectangle', radius?: number, wid
         // Расчет периметра круга
         const perimeter = 2 * Math.PI * radius;
         
-        // Сохранение
-        console.log(`Saving circle: radius=${radius}, area=${area.toFixed(2)}, perimeter=${perimeter.toFixed(2)}`);
-        
-        // Отображение
-        console.log(`Circle: radius=${radius} -> Area: ${area.toFixed(2)}, Perimeter: ${perimeter.toFixed(2)}`);
+        return {area, perimeter};
 
     } else if (shapeType === 'rectangle') {
         // Валидация прямоугольника
@@ -28,14 +24,12 @@ function badProcessShape(shapeType: 'circle' | 'rectangle', radius?: number, wid
         // Расчет периметра прямоугольника
         const perimeter = 2 * (width + height);
         
-        // Сохранение
-        console.log(`Saving rectangle: width=${width}, height=${height}, area=${area}, perimeter=${perimeter}`);
-        
-        // Отображение
-        console.log(`Rectangle: ${width}x${height} -> Area: ${area}, Perimeter: ${perimeter}`);
+        return {area, perimeter};
     }
+
+    throw new Error('Invalid shape type')
 }
 
 // Использование
-badProcessShape('circle', 5);
-badProcessShape('rectangle', undefined, 4, 6);
+sprBadProcessShape('circle', 5);
+sprBadProcessShape('rectangle', undefined, 4, 6);

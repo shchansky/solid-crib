@@ -1,5 +1,5 @@
 // ✅ ХОРОШО: Соблюдение SRP - каждый метод делает что-то одно
-class GoodShapeProcessor {
+class SprGoodShapeProcessor {
     radius?: number;
     width?: number;
     height?: number;
@@ -33,64 +33,36 @@ class GoodShapeProcessor {
 
     // Только расчет площади прямоугольника
     private calculateRectangleArea(): number {
-        return this.width! * this.height!;
+        return (this.width ?? 0) * (this.height ?? 0);
     }
 
     // Только расчет периметра прямоугольника
     private calculateRectanglePerimeter(): number {
-        return 2 * (this.width! + this.height!);
-    }
-
-    // Только сохранение круга
-    private saveCircle(area: number, perimeter: number): void {
-        console.log(`Saving circle: radius=${this.radius}, area=${area.toFixed(2)}, perimeter=${perimeter.toFixed(2)}`);
-    }
-
-    // Только сохранение прямоугольника
-    private saveRectangle(area: number, perimeter: number): void {
-        console.log(`Saving rectangle: width=${this.width}, height=${this.height}, area=${area}, perimeter=${perimeter}`);
-    }
-
-    // Только отображение круга
-    private displayCircle(area: number, perimeter: number): void {
-        console.log(`Circle: radius=${this.radius} -> Area: ${area.toFixed(2)}, Perimeter: ${perimeter.toFixed(2)}`);
-    }
-
-    // Только отображение прямоугольника
-    private displayRectangle(area: number, perimeter: number): void {
-        console.log(`Rectangle: ${this.width}x${this.height} -> Area: ${area}, Perimeter: ${perimeter}`);
+        return 2 * ((this.width ?? 0) + (this.height ?? 0));
     }
 
     // Координатор для круга
-    public processCircle(): void {
+    public processCircle(): {area: number, perimeter: number} {
         if (!this.isValidCircle()) {
             throw new Error('Invalid circle radius');
         }
 
-        const area = this.calculateCircleArea();
-        const perimeter = this.calculateCirclePerimeter();
-        
-        this.saveCircle(area, perimeter);
-        this.displayCircle(area, perimeter);
+        return {area: this.calculateCircleArea() , perimeter: this.calculateCirclePerimeter()};        
     }
 
     // Координатор для прямоугольника
-    public processRectangle(): void {
+    public processRectangle(): {area: number, perimeter: number} {
         if (!this.isValidRectangle()) {
             throw new Error('Invalid rectangle dimensions');
         }
 
-        const area = this.calculateRectangleArea();
-        const perimeter = this.calculateRectanglePerimeter();
-        
-        this.saveRectangle(area, perimeter);
-        this.displayRectangle(area, perimeter);
+        return {area: this.calculateRectangleArea(), perimeter: this.calculateRectanglePerimeter()};        
     }
 }
 
 // Использование
-const goodCircle = new GoodShapeProcessor(5);
-goodCircle.processCircle();
+const sprGoodCircle = new SprGoodShapeProcessor(5);
+sprGoodCircle.processCircle();
 
-const goodRectangle = new GoodShapeProcessor(undefined, 4, 6);
-goodRectangle.processRectangle(); 
+const sprGoodRectangle = new SprGoodShapeProcessor(undefined, 4, 6);
+sprGoodRectangle.processRectangle(); 
