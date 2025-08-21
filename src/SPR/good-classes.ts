@@ -12,12 +12,12 @@ class SprGoodShapeProcessor {
 
     // Только валидация круга
     private isValidCircle(): boolean {
-        return this.radius !== undefined && this.radius > 0;
+        return !!this.radius && this.radius > 0;
     }
 
     // Только валидация прямоугольника
     private isValidRectangle(): boolean {
-        return this.width !== undefined && this.height !== undefined && 
+        return !!this.width  && !!this.height && 
                this.width > 0 && this.height > 0;
     }
 

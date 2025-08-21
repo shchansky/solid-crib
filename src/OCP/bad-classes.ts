@@ -6,7 +6,7 @@
 // 3. Нарушение принципа единственной ответственности - класс знает о всех типах фигур
 // 4. Сложность тестирования - нужно тестировать весь класс при добавлении новой фигуры
 // 5. Риск сломать существующий функционал при добавлении новой фигуры
-class BadShapeCalculator {
+class OcpBadShapeCalculator {
     calculateArea(shapeType: string, radius?: number, width?: number, height?: number): number {
         if (shapeType === 'circle') {
             if (!radius) throw new Error('Circle needs radius');
@@ -60,9 +60,9 @@ class BadShapeCalculator {
 }
 
 // Использование
-const badCalculator = new BadShapeCalculator();
+const ocpBadCalculator = new OcpBadShapeCalculator();
 
-console.log('Circle area:', badCalculator.calculateArea('circle', 5));
-console.log('Rectangle area:', badCalculator.calculateArea('rectangle', undefined, 4, 6));
-console.log('Triangle area:', badCalculator.calculateArea('triangle', undefined, 4, 6));
-console.log('Square area:', badCalculator.calculateArea('square', undefined, 5)); 
+const circleArea = ocpBadCalculator.calculateArea('circle', 5);
+const rectangleArea = ocpBadCalculator.calculateArea('rectangle', undefined, 4, 6);
+const triangleArea = ocpBadCalculator.calculateArea('triangle', undefined, 4, 6);
+const squareArea = ocpBadCalculator.calculateArea('square', undefined, 5);

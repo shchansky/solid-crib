@@ -8,7 +8,7 @@
 // 5. Нарушение полиморфизма - код должен знать конкретный тип объекта
 
 // Базовый класс для фигур
-class Shape {
+class LspBadShape {
     protected width: number;
     protected height: number;
 
@@ -35,7 +35,7 @@ class Shape {
 
 // ❌ НАРУШЕНИЕ LSP: Круг не может заменить Shape
 // Круг имеет только радиус, а не ширину и высоту
-class BadCircle extends Shape {
+class LspBadCircle extends LspBadShape {
     private radius: number;
 
     constructor(radius: number) {
@@ -44,29 +44,24 @@ class BadCircle extends Shape {
         this.radius = radius;
     }
 
-    // ❌ НАРУШЕНИЕ LSP: Переопределяем getArea() с другим поведением
+    // ❌ НАРУШЕНИЕ LSP: Переопределяем getArea() с другим поведением (хотя это правильно для круга)
     getArea(): number {
-        return Math.PI * this.radius * this.radius; // Правильно для круга
+        return Math.PI * this.radius * this.radius; 
     }
 
-    // ❌ НАРУШЕНИЕ LSP: Переопределяем getPerimeter() с другим поведением
+    // ❌ НАРУШЕНИЕ LSP: Переопределяем getPerimeter() с другим поведением (вместо длины окружности возвращаем, например, диаметр)
     getPerimeter(): number {
-        return 2 * Math.PI * this.radius; // Правильно для круга
+        return 2 * this.radius; // ❌ Это диаметр, не периметр!
     }
 
     // ❌ НАРУШЕНИЕ LSP: Переопределяем getInfo() с другим форматом
     getInfo(): string {
         return `Circle: radius=${this.radius}`; // Другой формат информации
     }
-
-    // ❌ НАРУШЕНИЕ LSP: Добавляем метод, которого нет в базовом классе
-    getDiameter(): number {
-        return 2 * this.radius;
-    }
 }
 
 // ❌ НАРУШЕНИЕ LSP: Треугольник не может заменить Shape
-class BadTriangle extends Shape {
+class LspBadTriangle extends LspBadShape {
     private side1: number;
     private side2: number;
     private side3: number;
@@ -79,50 +74,46 @@ class BadTriangle extends Shape {
         this.side3 = side3;
     }
 
-    // ❌ НАРУШЕНИЕ LSP: Переопределяем getArea() с другим поведением
+    // ❌ НАРУШЕНИЕ LSP: Переопределяем getArea() с другим поведением (хотя это правильно для треугольника)
+    //
     getArea(): number {
         // Формула Герона для треугольника
         const s = (this.side1 + this.side2 + this.side3) / 2;
         return Math.sqrt(s * (s - this.side1) * (s - this.side2) * (s - this.side3));
     }
 
-    // ❌ НАРУШЕНИЕ LSP: Переопределяем getPerimeter() с другим поведением
+    // ❌ НАРУШЕНИЕ LSP: Переопределяем getPerimeter() с другим поведением (хотя это правильно для треугольника)
     getPerimeter(): number {
         return this.side1 + this.side2 + this.side3; // Правильно для треугольника
     }
 
     // ❌ НАРУШЕНИЕ LSP: Переопределяем getInfo() с другим форматом
     getInfo(): string {
-        return `Triangle: sides=${this.side1},${this.side2},${this.side3}`; // Другой формат
-    }
-
-    // ❌ НАРУШЕНИЕ LSP: Добавляем метод, которого нет в базовом классе
-    isEquilateral(): boolean {
-        return this.side1 === this.side2 && this.side2 === this.side3;
+        return `Triangle: sides=${this.side1},${this.side2},${this.side3}`; // Другой формат информации
     }
 }
 
 // Функция, которая ожидает Shape, но может сломаться с подклассами
-function processShape(shape: Shape): void {
-    console.log('Processing shape...');
-    console.log('Info:', shape.getInfo());
-    console.log('Area:', shape.getArea().toFixed(2));
-    console.log('Perimeter:', shape.getPerimeter().toFixed(2));
-    
-    // ❌ ПРОБЛЕМА: Код может сломаться, если подкласс не поддерживает ожидаемое поведение
-    // Например, если подкласс возвращает неожиданный формат в getInfo()
+function lspBadProcessShape(shape: LspBadShape): {
+    info: string;
+    area: number;
+    perimeter: number;
+} {
+    return {
+        info: shape.getInfo(),
+        area: shape.getArea(),
+        perimeter: shape.getPerimeter(),
+    };
+
 }
 
 // Использование - демонстрация проблем
-const rectangle = new Shape(4, 6);
-const badCircle = new BadCircle(5);
-const badTriangle = new BadTriangle(3, 4, 5);
+const lspRectangle = new LspBadShape(4, 6);
+const lspBadCircle = new LspBadCircle(5);
+const lspBadTriangle = new LspBadTriangle(3, 4, 5);
 
-console.log('=== Rectangle (базовый класс):');
-processShape(rectangle);
+lspBadProcessShape(lspRectangle);
 
-console.log('\n=== BadCircle (нарушает LSP):');
-processShape(badCircle); // Может работать, но поведение неожиданное
+lspBadProcessShape(lspBadCircle); // Будет работать, но поведение неожиданное
 
-console.log('\n=== BadTriangle (нарушает LSP):');
-processShape(badTriangle); // Может работать, но поведение неожиданное 
+lspBadProcessShape(lspBadTriangle); // Будет работать, но поведение неожиданное 
