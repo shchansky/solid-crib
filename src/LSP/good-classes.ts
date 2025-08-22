@@ -8,15 +8,19 @@
 // 5. Полиморфизм - код работает с базовым типом, не зная конкретный подкласс
 
 // Базовый интерфейс - определяет контракт для всех фигур
-interface Shape {
+
+// Жесткий формат: "ИМЯ: Area=ЧИСЛО, Perimeter=ЧИСЛО"
+type InfoType = `${string}: Area=${string}, Perimeter=${string}`;
+interface LspGoodShape {
     getArea(): number;
     getPerimeter(): number;
-    getInfo(): string;
+    // Жесткий формат: "ИМЯ: Area=ЧИСЛО, Perimeter=ЧИСЛО"
+    getInfo(): InfoType;
 }
 
 // ✅ LSP: Rectangle - истинный подтип Shape
 // Выполняет все обещания интерфейса Shape
-class Rectangle implements Shape {
+class LspGoodRectangle implements LspGoodShape {
     constructor(private width: number, private height: number) {}
 
     getArea(): number {
@@ -27,8 +31,9 @@ class Rectangle implements Shape {
         return 2 * (this.width + this.height);
     }
 
-    getInfo(): string {
-        return `Rectangle: ${this.width}x${this.height}`;
+    // ✅ LSP: Строго следует контракту формата
+    getInfo(): `${string}: Area=${string}, Perimeter=${string}` {
+        return `Rectangle: Area=${this.getArea().toFixed(2)}, Perimeter=${this.getPerimeter().toFixed(2)}`;
     }
 
     // ✅ LSP: Дополнительные методы не нарушают контракт
@@ -43,7 +48,7 @@ class Rectangle implements Shape {
 
 // ✅ LSP: Circle - истинный подтип Shape
 // Выполняет все обещания интерфейса Shape
-class Circle implements Shape {
+class LspGoodCircle implements LspGoodShape {
     constructor(private radius: number) {}
 
     getArea(): number {
@@ -54,8 +59,9 @@ class Circle implements Shape {
         return 2 * Math.PI * this.radius;
     }
 
-    getInfo(): string {
-        return `Circle: radius=${this.radius}`;
+    // ✅ LSP: Строго следует контракту формата
+    getInfo(): `${string}: Area=${string}, Perimeter=${string}` {
+        return `Circle: Area=${this.getArea().toFixed(2)}, Perimeter=${this.getPerimeter().toFixed(2)}`;
     }
 
     // ✅ LSP: Дополнительные методы не нарушают контракт
@@ -70,7 +76,7 @@ class Circle implements Shape {
 
 // ✅ LSP: Triangle - истинный подтип Shape
 // Выполняет все обещания интерфейса Shape
-class Triangle implements Shape {
+class LspGoodTriangle implements LspGoodShape {
     constructor(private side1: number, private side2: number, private side3: number) {}
 
     getArea(): number {
@@ -83,8 +89,9 @@ class Triangle implements Shape {
         return this.side1 + this.side2 + this.side3;
     }
 
-    getInfo(): string {
-        return `Triangle: sides=${this.side1},${this.side2},${this.side3}`;
+    // ✅ LSP: Строго следует контракту формата
+    getInfo(): `${string}: Area=${string}, Perimeter=${string}` {
+        return `Triangle: Area=${this.getArea().toFixed(2)}, Perimeter=${this.getPerimeter().toFixed(2)}`;
     }
 
     // ✅ LSP: Дополнительные методы не нарушают контракт
@@ -92,82 +99,37 @@ class Triangle implements Shape {
         return this.side1 === this.side2 && this.side2 === this.side3;
     }
 
-    isRightAngled(): boolean {
-        const sides = [this.side1, this.side2, this.side3].sort((a, b) => a - b);
-        return Math.abs(sides[0] * sides[0] + sides[1] * sides[1] - sides[2] * sides[2]) < 0.001;
-    }
 }
 
-// ✅ LSP: Square - истинный подтип Shape
-// Выполняет все обещания интерфейса Shape
-class Square implements Shape {
-    constructor(private side: number) {}
 
-    getArea(): number {
-        return this.side * this.side;
-    }
 
-    getPerimeter(): number {
-        return 4 * this.side;
-    }
-
-    getInfo(): string {
-        return `Square: side=${this.side}`;
-    }
-
-    // ✅ LSP: Дополнительные методы не нарушают контракт
-    getSide(): number {
-        return this.side;
-    }
-
-    getDiagonal(): number {
-        return this.side * Math.sqrt(2);
-    }
-}
-
-// ✅ LSP: Функция работает с любым подтипом Shape
-// Не нужно знать конкретный тип - полиморфизм работает
-function processShape(shape: Shape): void {
-    console.log('Processing shape...');
-    console.log('Info:', shape.getInfo());
-    console.log('Area:', shape.getArea().toFixed(2));
-    console.log('Perimeter:', shape.getPerimeter().toFixed(2));
-}
-
-// ✅ LSP: Функция для множественной обработки
-// Работает с массивом любых подтипов Shape
-function processShapes(shapes: Shape[]): void {
-    shapes.forEach((shape, index) => {
-        console.log(`\n--- Shape ${index + 1} ---`);
-        processShape(shape);
-    });
-}
-
-// ✅ LSP: Функция для сравнения фигур
-// Работает с любыми подтипами Shape
-function compareShapes(shape1: Shape, shape2: Shape): void {
-    console.log('Comparing shapes:');
-    console.log('Shape 1:', shape1.getInfo());
-    console.log('Shape 2:', shape2.getInfo());
-    console.log('Area difference:', Math.abs(shape1.getArea() - shape2.getArea()).toFixed(2));
-    console.log('Perimeter difference:', Math.abs(shape1.getPerimeter() - shape2.getPerimeter()).toFixed(2));
-}
 
 // Использование - демонстрация правильной подстановки
-const rectangle = new Rectangle(4, 6);
-const circle = new Circle(5);
-const triangle = new Triangle(3, 4, 5);
-const square = new Square(5);
+const lspGoodrectangle = new LspGoodRectangle(4, 6);
+const lspGoodcircle = new LspGoodCircle(5);
+const lspGoodtriangle = new LspGoodTriangle(3, 4, 5);
 
-console.log('=== Individual processing:');
-processShape(rectangle);
-processShape(circle);
-processShape(triangle);
-processShape(square);
 
-console.log('\n=== Batch processing:');
-processShapes([rectangle, circle, triangle, square]);
+function processShapes(shapes: LspGoodShape[]): {summaryArea: number, summaryPerimeter: number, summaryInfo: InfoType[]} {
 
-console.log('\n=== Shape comparison:');
-compareShapes(rectangle, circle);
-compareShapes(square, triangle); 
+
+    let summaryArea = 0;
+    let summaryPerimeter = 0;
+    let summaryInfo: InfoType[] = [];
+
+    shapes.forEach((shape) => {
+        summaryArea += shape.getArea();
+        summaryPerimeter += shape.getPerimeter();
+        summaryInfo.push(shape.getInfo());
+    });
+
+    return {
+        summaryArea,
+        summaryPerimeter,
+        summaryInfo
+    }
+
+}
+
+processShapes([lspGoodrectangle, lspGoodcircle, lspGoodtriangle])
+

@@ -11,7 +11,8 @@
 interface ShapeData {
     getArea(): number;
     getPerimeter(): number;
-    getInfo(): string;
+    // Жесткий формат: "ИМЯ: Area=ЧИСЛО, Perimeter=ЧИСЛО"
+    getInfo(): `${string}: Area=${string}, Perimeter=${string}`;
 }
 
 // ✅ LSP: Фабричные функции создают объекты, реализующие общий интерфейс
@@ -21,7 +22,7 @@ function createRectangle(width: number, height: number): ShapeData {
     return {
         getArea: () => width * height,
         getPerimeter: () => 2 * (width + height),
-        getInfo: () => `Rectangle: ${width}x${height}`
+        getInfo: () => `Rectangle: Area=${(width * height).toFixed(2)}, Perimeter=${(2 * (width + height)).toFixed(2)}`
     };
 }
 
@@ -29,7 +30,7 @@ function createCircle(radius: number): ShapeData {
     return {
         getArea: () => Math.PI * radius * radius,
         getPerimeter: () => 2 * Math.PI * radius,
-        getInfo: () => `Circle: radius=${radius}`
+        getInfo: () => `Circle: Area=${(Math.PI * radius * radius).toFixed(2)}, Perimeter=${(2 * Math.PI * radius).toFixed(2)}`
     };
 }
 
@@ -41,15 +42,15 @@ function createTriangle(side1: number, side2: number, side3: number): ShapeData 
             return Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
         },
         getPerimeter: () => side1 + side2 + side3,
-        getInfo: () => `Triangle: sides=${side1},${side2},${side3}`
-    };
-}
-
-function createSquare(side: number): ShapeData {
-    return {
-        getArea: () => side * side,
-        getPerimeter: () => 4 * side,
-        getInfo: () => `Square: side=${side}`
+        getInfo: () => {
+            const area = (() => {
+                const perimeter = side1 + side2 + side3;
+                const s = perimeter / 2;
+                return Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
+            })();
+            const perimeter = side1 + side2 + side3;
+            return `Triangle: Area=${area.toFixed(2)}, Perimeter=${perimeter.toFixed(2)}`;
+        }
     };
 }
 
