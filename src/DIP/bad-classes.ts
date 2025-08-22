@@ -26,6 +26,9 @@
 
 // ❌ НАРУШЕНИЕ DIP: Конкретные классы для разных типов фигур
 // 🔄 ПРОБЛЕМА: Нет общего интерфейса - детали не зависят от абстракций
+
+
+
 class BadCircle {
     constructor(private radius: number) {}
 
@@ -58,92 +61,34 @@ class BadRectangle {
     }
 }
 
-class BadTriangle {
-    constructor(private side1: number, private side2: number, private side3: number) {}
-
-    getArea(): number {
-        const s = (this.side1 + this.side2 + this.side3) / 2;
-        return Math.sqrt(s * (s - this.side1) * (s - this.side2) * (s - this.side3));
-    }
-
-    getPerimeter(): number {
-        return this.side1 + this.side2 + this.side3;
-    }
-
-    getInfo(): string {
-        return `Triangle: sides=${this.side1},${this.side2},${this.side3}`;
-    }
+interface DipBadShapeData {
+    circledata: { radius: number };
+    rectangledata: { width: number; height: number };
 }
 
-// ❌ НАРУШЕНИЕ DIP: Конкретные классы для разных типов сохранения
-// 🔄 ПРОБЛЕМА: Нет общего интерфейса - детали не зависят от абстракций
-class BadFileStorage {
-    saveToFile(data: string): void {
-        console.log(`Saving to file: ${data}`);
-    }
-}
-
-class BadDatabaseStorage {
-    saveToDatabase(data: string): void {
-        console.log(`Saving to database: ${data}`);
-    }
-}
-
-class BadCloudStorage {
-    saveToCloud(data: string): void {
-        console.log(`Saving to cloud: ${data}`);
-    }
-}
-
-// ❌ НАРУШЕНИЕ DIP: Конкретные классы для разных типов отображения
-// 🔄 ПРОБЛЕМА: Нет общего интерфейса - детали не зависят от абстракций
-class BadConsoleDisplay {
-    display(data: string): void {
-        console.log(`Console: ${data}`);
-    }
-}
-
-class BadHTMLDisplay {
-    display(data: string): void {
-        console.log(`HTML: ${data}`);
-    }
-}
-
-class BadPDFDisplay {
-    display(data: string): void {
-        console.log(`PDF: ${data}`);
-    }
-}
 
 // ❌ НАРУШЕНИЕ DIP: Класс зависит от конкретных реализаций
 // 🔄 ПРОБЛЕМА: Высокоуровневый модуль зависит от низкоуровневых
 class BadShapeCalculator {
     // ❌ ПРОБЛЕМА: Зависимость от конкретных классов
     // 🔄 НАРУШЕНИЕ: Высокоуровневый модуль зависит от низкоуровневых
-    private fileStorage: BadFileStorage;
-    private databaseStorage: BadDatabaseStorage;
-    private consoleDisplay: BadConsoleDisplay;
+    private badCircle: BadCircle;
+    private badRectangle: BadRectangle;
 
-    constructor() {
+    constructor({circledata : {radius}, rectangledata : {width, height}} : DipBadShapeData) {
         // ❌ НАРУШЕНИЕ DIP: Создание конкретных зависимостей внутри класса
-        // 🔄 НАРУШЕНИЕ: Высокоуровневый модуль создает низкоуровневые модули
-        this.fileStorage = new BadFileStorage();
-        this.databaseStorage = new BadDatabaseStorage();
-        this.consoleDisplay = new BadConsoleDisplay();
+        // 🔄 НАРУШЕНИЕ: Высокоуровневый модуль создает низкоуровневые модули и зависит от них
+        this.badCircle = new BadCircle(radius);
+        this.badRectangle = new BadRectangle(width, height);
     }
 
     // ❌ ПРОБЛЕМА: Методы зависят от конкретных типов фигур
     // 🔄 НАРУШЕНИЕ: Высокоуровневый модуль зависит от низкоуровневых
-    calculateCircleArea(radius: number): void {
-        const circle = new BadCircle(radius); // ❌ Создание конкретного объекта
-        const area = circle.getArea();
-        
-        this.fileStorage.saveToFile(`Circle area: ${area}`);
-        this.databaseStorage.saveToDatabase(`Circle area: ${area}`);
-        this.consoleDisplay.display(`Circle area: ${area}`);
+    calculateCircleArea(): number {
+        return this.badCircle.getArea();
     }
 
-    calculateRectangleArea(width: number, height: number): void {
+    calculateRectangleArea(): void {
         const rectangle = new BadRectangle(width, height); // ❌ Создание конкретного объекта
         const area = rectangle.getArea();
         

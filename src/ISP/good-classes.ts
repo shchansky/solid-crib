@@ -67,8 +67,8 @@ class IspGoodRectangle implements RectangleShape {
 }
 
 // Применение 1   ✅ ISP: Фабричные функции создают объекты только с нужными методами
-const ispGoodCreateShapeFactory1 = {
-    circle: (radius: number) => {
+class IspGoodCreateShapeFactory {
+     static getCircleData(radius: number) {
         const circle = new IspGoodCircle(radius);
         return {
             area: circle.getArea(),
@@ -76,9 +76,9 @@ const ispGoodCreateShapeFactory1 = {
             info: circle.getInfo(),
             diameter: circle.getDiametr(),
         };
-    },
+    }
 
-    rectangle: (width: number, height: number) => {
+    static getRectangleData(width: number, height: number) {
         const rectangle = new IspGoodRectangle(width, height);
         return {
             area: rectangle.getArea(),
@@ -88,6 +88,10 @@ const ispGoodCreateShapeFactory1 = {
         };
     }
 }
+
+
+const ispGoodCircleData1 = IspGoodCreateShapeFactory.getCircleData(10);
+const ispGoodRectangleData1 = IspGoodCreateShapeFactory.getRectangleData(4, 6);
 
 
 

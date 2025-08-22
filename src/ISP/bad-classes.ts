@@ -77,9 +77,9 @@ class IspBadRectangle implements BadShape {
 
 
 // Применение
-const _createShapeFactory = {
+class IspBadCreateShapeFactory {
     // Фабричная функция для круга
-    circle: (radius: number) => {
+    static circle(radius: number) {
         const circle = new IspBadCircle(radius);
         return {
             area: circle.getArea(),
@@ -88,10 +88,10 @@ const _createShapeFactory = {
             diameter: circle.getDiametr(),
             diagonal: circle.getDiagonal(), // ❌ Ненужное поле для круга
         };
-    },
+    }
     
     // Фабричная функция для прямоугольника
-    rectangle: (width: number, height: number) => {
+    static rectangle(width: number, height: number) {
         const rectangle = new IspBadRectangle(width, height);
         return {
             area: rectangle.getArea(),
@@ -103,5 +103,5 @@ const _createShapeFactory = {
     }
 };
 
-const _badCircleData = _createShapeFactory.circle(10);
-const _badRectangleData = _createShapeFactory.rectangle(4, 6);
+const ispBadCircleData = IspBadCreateShapeFactory.circle(10);
+const ispBadRectangleData = IspBadCreateShapeFactory.rectangle(4, 6);
