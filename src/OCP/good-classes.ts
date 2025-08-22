@@ -9,14 +9,14 @@
 
 // Базовый интерфейс - ЗАКРЫТ для изменения
 // ✅ OCP: Этот интерфейс никогда не меняется при добавлении новых фигур
-interface Shape {
+interface OcpGoodShape {
     calculateArea(): number;
     calculatePerimeter(): number;
 }
 
 // Конкретные фигуры - ОТКРЫТЫ для расширения
 // ✅ OCP: Каждый класс реализует интерфейс Shape и может быть добавлен без изменения существующего кода
-class Circle implements Shape {
+class OcpGoodCircle implements OcpGoodShape {
     constructor(private radius: number) {}
 
     calculateArea(): number {
@@ -26,9 +26,14 @@ class Circle implements Shape {
     calculatePerimeter(): number {
         return 2 * Math.PI * this.radius;
     }
+
+    // ✅ OCP: Можем расширить функционал класса
+    getInfo(): string {
+        return `Circle: radius=${this.radius}`;
+    }
 }
 
-class Rectangle implements Shape {
+class OcpGoodRectangle implements OcpGoodShape {
     constructor(private width: number, private height: number) {}
 
     calculateArea(): number {
@@ -42,7 +47,7 @@ class Rectangle implements Shape {
 
 // ✅ OCP: Легко добавляем новые фигуры БЕЗ изменения существующего кода!
 // Просто создаем новый класс, реализующий интерфейс Shape
-class Triangle implements Shape {
+class OcpGoodTriangle implements OcpGoodShape {
     constructor(private base: number, private height: number, private side1: number, private side2: number) {}
 
     calculateArea(): number {
@@ -54,46 +59,28 @@ class Triangle implements Shape {
     }
 }
 
-// ✅ OCP: И еще одну фигуру - тоже без изменения существующего кода!
-class Square implements Shape {
-    constructor(private side: number) {}
 
-    calculateArea(): number {
-        return this.side * this.side;
-    }
-
-    calculatePerimeter(): number {
-        return 4 * this.side;
-    }
-}
 
 // Калькулятор работает с любыми фигурами - ЗАКРЫТ для изменения
 // ✅ OCP: Этот класс НИКОГДА не меняется при добавлении новых фигур!
 // Он работает с интерфейсом Shape, а не с конкретными типами
-class GoodShapeCalculator {
-    calculate(shape: Shape): void {
-        console.log(`Area: ${shape.calculateArea().toFixed(2)}`);
-        console.log(`Perimeter: ${shape.calculatePerimeter().toFixed(2)}`);
+class OcpGoodShapeCalculator {
+    calculate(shape: OcpGoodShape[]): {area: number, perimeter: number}[] {
+        return shape.map(shape => ({
+            area: shape.calculateArea(),
+            perimeter: shape.calculatePerimeter(),
+        }));
     }
 }
 
 // ✅ OCP: Использование - новые фигуры добавляются без изменения существующего кода
 // Калькулятор работает с любыми объектами, реализующими интерфейс Shape
-const calculator = new GoodShapeCalculator();
+const ocpGoodCalculator = new OcpGoodShapeCalculator();
 
-const _circle = new Circle(5);
-const _rectangle = new Rectangle(4, 6);
-const _triangle = new Triangle(4, 6, 5, 7);
-const _square = new Square(5);
+const _circle = new OcpGoodCircle(5);
+const _rectangle = new OcpGoodRectangle(4, 6);
+const _triangle = new OcpGoodTriangle(4, 6, 5, 7);
 
-console.log('Circle:');
-calculator.calculate(_circle);
+ocpGoodCalculator.calculate([_circle, _rectangle, _triangle]);
 
-console.log('Rectangle:');
-calculator.calculate(_rectangle);
 
-console.log('Triangle:');
-calculator.calculate(_triangle);
-
-console.log('Square:');
-calculator.calculate(_square); 

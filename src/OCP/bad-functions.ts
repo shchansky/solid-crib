@@ -57,13 +57,13 @@ function badCalculatePerimeter(shapeType: string, radius?: number, width?: numbe
     throw new Error('Unknown shape type');
 }
 
-function badProcessShape(shapeType: string, radius?: number, width?: number, height?: number): void {
+function badProcessShape(shapeType: string, radius?: number, width?: number, height?: number): {area: number, perimeter: number} {
     // ❌ НАРУШЕНИЕ OCP: Каждый раз нужно добавлять новые условия!
     // Эта функция зависит от других функций, которые тоже нарушают OCP
     const area = badCalculateArea(shapeType, radius, width, height);
     const perimeter = badCalculatePerimeter(shapeType, radius, width, height);
     
-    console.log(`${shapeType} - Area: ${area.toFixed(2)}, Perimeter: ${perimeter.toFixed(2)}`);
+    return {area, perimeter};
 }
 
 // Использование
