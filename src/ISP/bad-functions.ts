@@ -8,7 +8,7 @@
 // 5. Нарушение принципа подстановки - функции могут случайно вызвать ненужные методы
 
 // ❌ НАРУШЕНИЕ ISP: Толстый тип для фигуры, который содержит все возможные методы
-type BadShapeData = {
+type Shape = {
     // Основные методы для всех фигур
     getArea(): number;
     getPerimeter(): number;
@@ -22,7 +22,7 @@ type BadShapeData = {
 };
 
 // ❌ НАРУШЕНИЕ ISP: Фабричные функции создают объекты с ненужными методами
-function badCreateCircle(radius: number): BadShapeData {
+function createCircle(radius: number): Shape {
     return {
         
         getArea: () => Math.PI * radius * radius,
@@ -34,7 +34,7 @@ function badCreateCircle(radius: number): BadShapeData {
     };
 }
 
-function badCreateRectangle(width: number, height: number): BadShapeData {
+function createRectangle(width: number, height: number): Shape {
     return {
         getArea: () => width * height,
         getPerimeter: () => 2 * (width + height),
@@ -51,7 +51,7 @@ function badCreateRectangle(width: number, height: number): BadShapeData {
 const createShapeFactory = {
     // Фабричная функция для круга
     circle: (radius: number) => {
-        const circle = badCreateCircle(radius);
+        const circle = createCircle(radius);
         return {
             area: circle.getArea(),
             perimeter: circle.getPerimeter(),
@@ -63,7 +63,7 @@ const createShapeFactory = {
     
     // Фабричная функция для прямоугольника
     rectangle: (width: number, height: number) => {
-        const rectangle = badCreateRectangle(width, height);
+        const rectangle = createRectangle(width, height);
         return {
             area: rectangle.getArea(),
             perimeter: rectangle.getPerimeter(),
@@ -76,3 +76,5 @@ const createShapeFactory = {
 
 const badCircleData = createShapeFactory.circle(10);
 const badRectangleData = createShapeFactory.rectangle(4, 6);
+
+export {}

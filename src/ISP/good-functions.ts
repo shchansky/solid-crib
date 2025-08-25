@@ -10,25 +10,25 @@
 // ✅ ISP: Тонкие типы для разных областей ответственности
 
 // Базовый тип для всех фигур - только основные методы
-type IspGoodShapeData = {
+type Shape = {
     getArea: () => number;
     getPerimeter: () => number;
     getInfo: () => string;
 };
 
 // Расширенный тип для круга
-type CircleShapeData = IspGoodShapeData & {
+type CircleShape = Shape & {
     getDiametr: () => number;
 };
 
 // Расширенный тип для прямоугольника
-type RectangleShapeData = IspGoodShapeData & {
+type RectangleShape = Shape & {
     getDiagonal: () => number;
 };
 
 // ✅ ISP: Фабричные функции создают объекты только с нужными методами
 
-function ispGoodCreateCircle(radius: number): CircleShapeData {
+function createCircle(radius: number): CircleShape {
     return {
         getArea: () => Math.PI * radius * radius,
         getPerimeter: () => 2 * Math.PI * radius,
@@ -37,7 +37,7 @@ function ispGoodCreateCircle(radius: number): CircleShapeData {
     };
 }
 
-function ispGoodCreateRectangle(width: number, height: number): RectangleShapeData {
+function createRectangle(width: number, height: number): RectangleShape {
     return {
         getArea: () => width * height,
         getPerimeter: () => 2 * (width + height),
@@ -51,7 +51,7 @@ function ispGoodCreateRectangle(width: number, height: number): RectangleShapeDa
 const ispGoodCreateShapeFactory = {
     // Фабричная функция для круга
     circle: (radius: number) => {
-        const circle = ispGoodCreateCircle(radius);
+        const circle = createCircle(radius);
         return {
             area: circle.getArea(),
             perimeter: circle.getPerimeter(),
@@ -62,7 +62,7 @@ const ispGoodCreateShapeFactory = {
     
     // Фабричная функция для прямоугольника
     rectangle: (width: number, height: number) => {
-        const rectangle = ispGoodCreateRectangle(width, height);
+        const rectangle = createRectangle(width, height);
         return {
             area: rectangle.getArea(),
             perimeter: rectangle.getPerimeter(),
@@ -74,3 +74,5 @@ const ispGoodCreateShapeFactory = {
 
 const ispGoodCircleData = ispGoodCreateShapeFactory.circle(10);
 const ispGoodRectangleData = ispGoodCreateShapeFactory.rectangle(4, 6);
+
+export {}

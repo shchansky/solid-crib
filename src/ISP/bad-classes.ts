@@ -8,7 +8,7 @@
 // 5. Нарушение принципа подстановки - классы не могут правильно реализовать все методы
 
 // ❌ НАРУШЕНИЕ ISP: Толстый универсальный интерфейс, который делает всё
-interface BadShape {
+interface Shape {
     // Основные методы для всех фигур
     getArea(): number;
     getPerimeter(): number;
@@ -23,7 +23,7 @@ interface BadShape {
 
 }
 
-class IspBadCircle implements BadShape {
+class Circle implements Shape {
     constructor(private radius: number) {}
 
     getArea() {
@@ -49,7 +49,7 @@ class IspBadCircle implements BadShape {
 }
 
 // ❌ ПРОБЛЕМА: Прямоугольник тоже должен реализовывать ненужные методы
-class IspBadRectangle implements BadShape {
+class Rectangle implements Shape {
     constructor(private width: number, private height: number) {}
 
     getArea(): number {
@@ -77,10 +77,10 @@ class IspBadRectangle implements BadShape {
 
 
 // Применение
-class IspBadCreateShapeFactory {
+class CreateShapeFactory {
     // Фабричная функция для круга
     static circle(radius: number) {
-        const circle = new IspBadCircle(radius);
+        const circle = new Circle(radius);
         return {
             area: circle.getArea(),
             perimeter: circle.getPerimeter(),
@@ -92,7 +92,7 @@ class IspBadCreateShapeFactory {
     
     // Фабричная функция для прямоугольника
     static rectangle(width: number, height: number) {
-        const rectangle = new IspBadRectangle(width, height);
+        const rectangle = new Rectangle(width, height);
         return {
             area: rectangle.getArea(),
             perimeter: rectangle.getPerimeter(),
@@ -103,5 +103,7 @@ class IspBadCreateShapeFactory {
     }
 };
 
-const ispBadCircleData = IspBadCreateShapeFactory.circle(10);
-const ispBadRectangleData = IspBadCreateShapeFactory.rectangle(4, 6);
+const ispBadCircleData = CreateShapeFactory.circle(10);
+const ispBadRectangleData = CreateShapeFactory.rectangle(4, 6);
+
+export {}

@@ -8,7 +8,7 @@
 // 5. Гибкость - классы могут реализовывать только нужные интерфейсы
 
 // ✅ ISP: Базовый интерфейс для всех фигур - только основные методы
-interface IspGoodShape {
+interface Shape {
     getArea(): number;
     getPerimeter(): number;
     getInfo(): string;
@@ -16,16 +16,16 @@ interface IspGoodShape {
 
 
 //Расширенный интерфейс для круга
-interface CircleShape extends IspGoodShape {
+interface CircleShape extends Shape {
     getDiametr(): number;
 }
 
 //Расширенный интерфейс для прямоугольника
-interface RectangleShape extends IspGoodShape {
+interface RectangleShape extends Shape {
     getDiagonal(): number;
 }
 
-class IspGoodCircle implements CircleShape {
+class Circle implements CircleShape {
     constructor(private radius: number) {}
 
     getArea() {
@@ -45,7 +45,7 @@ class IspGoodCircle implements CircleShape {
     }
 }
 
-class IspGoodRectangle implements RectangleShape {
+class Rectangle implements RectangleShape {
     constructor(private width: number, private height: number) {}
 
     getArea() {
@@ -69,7 +69,7 @@ class IspGoodRectangle implements RectangleShape {
 // Применение 1   ✅ ISP: Фабричные функции создают объекты только с нужными методами
 class IspGoodCreateShapeFactory {
      static getCircleData(radius: number) {
-        const circle = new IspGoodCircle(radius);
+        const circle = new Circle(radius);
         return {
             area: circle.getArea(),
             perimeter: circle.getPerimeter(),
@@ -79,7 +79,7 @@ class IspGoodCreateShapeFactory {
     }
 
     static getRectangleData(width: number, height: number) {
-        const rectangle = new IspGoodRectangle(width, height);
+        const rectangle = new Rectangle(width, height);
         return {
             area: rectangle.getArea(),
             perimeter: rectangle.getPerimeter(),
@@ -92,6 +92,9 @@ class IspGoodCreateShapeFactory {
 
 const ispGoodCircleData1 = IspGoodCreateShapeFactory.getCircleData(10);
 const ispGoodRectangleData1 = IspGoodCreateShapeFactory.getRectangleData(4, 6);
+
+export {}
+
 
 
 
