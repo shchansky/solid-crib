@@ -9,14 +9,14 @@
 
 // Базовый интерфейс - ЗАКРЫТ для изменения
 // ✅ OCP: Этот интерфейс никогда не меняется при добавлении новых фигур
-interface OcpGoodShape {
+interface Shape {
     calculateArea(): number;
     calculatePerimeter(): number;
 }
 
 // Конкретные фигуры - ОТКРЫТЫ для расширения
 // ✅ OCP: Каждый класс реализует интерфейс Shape и может быть добавлен без изменения существующего кода
-class OcpGoodCircle implements OcpGoodShape {
+class OcpGoodCircle implements Shape {
     constructor(private radius: number) {}
 
     calculateArea(): number {
@@ -33,7 +33,7 @@ class OcpGoodCircle implements OcpGoodShape {
     }
 }
 
-class OcpGoodRectangle implements OcpGoodShape {
+class OcpGoodRectangle implements Shape {
     constructor(private width: number, private height: number) {}
 
     calculateArea(): number {
@@ -47,7 +47,7 @@ class OcpGoodRectangle implements OcpGoodShape {
 
 // ✅ OCP: Легко добавляем новые фигуры БЕЗ изменения существующего кода!
 // Просто создаем новый класс, реализующий интерфейс Shape
-class OcpGoodTriangle implements OcpGoodShape {
+class OcpGoodTriangle implements Shape {
     constructor(private base: number, private height: number, private side1: number, private side2: number) {}
 
     calculateArea(): number {
@@ -65,7 +65,7 @@ class OcpGoodTriangle implements OcpGoodShape {
 // ✅ OCP: Этот класс НИКОГДА не меняется при добавлении новых фигур!
 // Он работает с интерфейсом Shape, а не с конкретными типами
 class OcpGoodShapeCalculator {
-    calculate(shape: OcpGoodShape[]): {area: number, perimeter: number}[] {
+    calculate(shape: Shape[]): {area: number, perimeter: number}[] {
         return shape.map(shape => ({
             area: shape.calculateArea(),
             perimeter: shape.calculatePerimeter(),
@@ -82,5 +82,7 @@ const _rectangle = new OcpGoodRectangle(4, 6);
 const _triangle = new OcpGoodTriangle(4, 6, 5, 7);
 
 ocpGoodCalculator.calculate([_circle, _rectangle, _triangle]);
+
+export {}
 
 

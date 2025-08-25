@@ -33,33 +33,14 @@ function createRectangle(width: number, height: number): ShapeData {
     };
 }
 
-// ✅ OCP: Легко добавляем новые фигуры БЕЗ изменения существующих функций!
-// Просто создаем новую фабричную функцию, возвращающую ShapeData
-function createTriangle(base: number, height: number, side1: number, side2: number): ShapeData {
-    return {
-        type: 'Triangle',
-        calculateArea: () => (base * height) / 2,
-        calculatePerimeter: () => base + side1 + side2
-    };
-}
-
-// ✅ OCP: И еще одну фигуру - тоже без изменения существующего кода!
-function createSquare(side: number): ShapeData {
-    return {
-        type: 'Square',
-        calculateArea: () => side * side,
-        calculatePerimeter: () => 4 * side
-    };
-}
-
 // Функция обработки - ЗАКРЫТА для изменения, работает с любыми фигурами
 // ✅ OCP: Эта функция НИКОГДА не меняется при добавлении новых фигур!
 // Она работает с типом ShapeData, а не с конкретными типами фигур
-function processShape(shape: ShapeData): void {
+function processShape(shape: ShapeData): {area: number, perimeter: number} {
     const area = shape.calculateArea();
     const perimeter = shape.calculatePerimeter();
     
-    console.log(`${shape.type} - Area: ${area.toFixed(2)}, Perimeter: ${perimeter.toFixed(2)}`);
+    return {area, perimeter};
 }
 
 // Функция для множественной обработки - тоже ЗАКРЫТА для изменения
@@ -72,15 +53,12 @@ function processShapes(shapes: ShapeData[]): void {
 // Функции обработки работают с любыми объектами типа ShapeData
 const circle = createCircle(5);
 const rectangle = createRectangle(4, 6);
-const triangle = createTriangle(4, 6, 5, 7);
-const square = createSquare(5);
 
 // ✅ OCP: Можем добавить еще фигуры и все будет работать без изменения существующего кода
 const shapes = [circle, rectangle, triangle, square];
-
 processShapes(shapes);
-
-// Или обрабатывать по отдельности
-console.log('\nОтдельная обработка:');
+// Или обрабатывать по-отдельности
 processShape(circle);
 processShape(rectangle); 
+
+export {}

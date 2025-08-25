@@ -7,7 +7,7 @@
 // 4. Сложность тестирования - нужно тестировать всю функцию при добавлении новой фигуры
 // 5. Риск сломать существующий функционал при добавлении новой фигуры
 
-function badCalculateArea(shapeType: string, radius?: number, width?: number, height?: number): number {
+function calculateArea(shapeType: string, radius?: number, width?: number, height?: number): number {
     if (shapeType === 'circle') {
         if (!radius) throw new Error('Circle needs radius');
         return Math.PI * radius * radius;
@@ -32,7 +32,7 @@ function badCalculateArea(shapeType: string, radius?: number, width?: number, he
     throw new Error('Unknown shape type');
 }
 
-function badCalculatePerimeter(shapeType: string, radius?: number, width?: number, height?: number): number {
+function calculatePerimeter(shapeType: string, radius?: number, width?: number, height?: number): number {
     if (shapeType === 'circle') {
         if (!radius) throw new Error('Circle needs radius');
         return 2 * Math.PI * radius;
@@ -57,17 +57,19 @@ function badCalculatePerimeter(shapeType: string, radius?: number, width?: numbe
     throw new Error('Unknown shape type');
 }
 
-function badProcessShape(shapeType: string, radius?: number, width?: number, height?: number): {area: number, perimeter: number} {
+function processShape(shapeType: string, radius?: number, width?: number, height?: number): {area: number, perimeter: number} {
     // ❌ НАРУШЕНИЕ OCP: Каждый раз нужно добавлять новые условия!
     // Эта функция зависит от других функций, которые тоже нарушают OCP
-    const area = badCalculateArea(shapeType, radius, width, height);
-    const perimeter = badCalculatePerimeter(shapeType, radius, width, height);
+    const area = calculateArea(shapeType, radius, width, height);
+    const perimeter = calculatePerimeter(shapeType, radius, width, height);
     
     return {area, perimeter};
 }
 
 // Использование
-badProcessShape('circle', 5);
-badProcessShape('rectangle', undefined, 4, 6);
-badProcessShape('triangle', undefined, 4, 6);
-badProcessShape('square', undefined, 5); 
+const circleParams = processShape('circle', 5);
+const rectangleParams = processShape('rectangle', undefined, 4, 6);
+const triangleParams = processShape('triangle', undefined, 4, 6);
+const squareParams = processShape('square', undefined, 5); 
+
+export {}
