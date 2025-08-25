@@ -27,8 +27,6 @@
 // ❌ НАРУШЕНИЕ DIP: Конкретные классы для разных типов фигур
 // 🔄 ПРОБЛЕМА: Нет общего интерфейса - детали не зависят от абстракций
 
-
-
 class BadCircle {
     constructor(private radius: number) {}
 
@@ -82,130 +80,12 @@ class BadShapeCalculator {
         this.badRectangle = new BadRectangle(width, height);
     }
 
-    // ❌ ПРОБЛЕМА: Методы зависят от конкретных типов фигур
-    // 🔄 НАРУШЕНИЕ: Высокоуровневый модуль зависит от низкоуровневых
     calculateCircleArea(): number {
         return this.badCircle.getArea();
     }
 
-    calculateRectangleArea(): void {
-        const rectangle = new BadRectangle(width, height); // ❌ Создание конкретного объекта
-        const area = rectangle.getArea();
-        
-        this.fileStorage.saveToFile(`Rectangle area: ${area}`);
-        this.databaseStorage.saveToDatabase(`Rectangle area: ${area}`);
-        this.consoleDisplay.display(`Rectangle area: ${area}`);
-    }
-
-    calculateTriangleArea(side1: number, side2: number, side3: number): void {
-        const triangle = new BadTriangle(side1, side2, side3); // ❌ Создание конкретного объекта
-        const area = triangle.getArea();
-        
-        this.fileStorage.saveToFile(`Triangle area: ${area}`);
-        this.databaseStorage.saveToDatabase(`Triangle area: ${area}`);
-        this.consoleDisplay.display(`Triangle area: ${area}`);
-    }
-
-    // ❌ ПРОБЛЕМА: Метод для обработки всех фигур зависит от конкретных типов
-    // 🔄 НАРУШЕНИЕ: Высокоуровневый модуль зависит от низкоуровневых
-    processAllShapes(): void {
-        const circle = new BadCircle(5);      // ❌ Создание конкретного объекта
-        const rectangle = new BadRectangle(4, 6); // ❌ Создание конкретного объекта
-        const triangle = new BadTriangle(3, 4, 5); // ❌ Создание конкретного объекта
-
-        this.fileStorage.saveToFile(circle.getInfo());
-        this.fileStorage.saveToFile(rectangle.getInfo());
-        this.fileStorage.saveToFile(triangle.getInfo());
-
-        this.databaseStorage.saveToDatabase(circle.getInfo());
-        this.databaseStorage.saveToDatabase(rectangle.getInfo());
-        this.databaseStorage.saveToDatabase(triangle.getInfo());
-
-        this.consoleDisplay.display(circle.getInfo());
-        this.consoleDisplay.display(rectangle.getInfo());
-        this.consoleDisplay.display(triangle.getInfo());
+    calculateRectangleArea(): number {
+        return this.badRectangle.getArea();
     }
 }
 
-// ❌ НАРУШЕНИЕ DIP: Класс для сравнения фигур зависит от конкретных типов
-class BadShapeComparator {
-    private fileStorage: FileStorage;
-    private consoleDisplay: ConsoleDisplay;
-
-    constructor() {
-        // ❌ НАРУШЕНИЕ DIP: Создание конкретных зависимостей внутри класса
-        this.fileStorage = new FileStorage();
-        this.consoleDisplay = new ConsoleDisplay();
-    }
-
-    // ❌ ПРОБЛЕМА: Метод знает о конкретных типах фигур
-    compareShapes(): void {
-        const circle = new Circle(5);
-        const rectangle = new Rectangle(4, 6);
-        const triangle = new Triangle(3, 4, 5);
-
-        const shapes = [circle, rectangle, triangle];
-        
-        // ❌ ПРОБЛЕМА: Нужно знать конкретные типы для правильной обработки
-        shapes.forEach(shape => {
-            if (shape instanceof Circle) {
-                this.fileStorage.saveToFile(`Circle: ${shape.getInfo()}`);
-                this.consoleDisplay.display(`Circle: ${shape.getInfo()}`);
-            } else if (shape instanceof Rectangle) {
-                this.fileStorage.saveToFile(`Rectangle: ${shape.getInfo()}`);
-                this.consoleDisplay.display(`Rectangle: ${shape.getInfo()}`);
-            } else if (shape instanceof Triangle) {
-                this.fileStorage.saveToFile(`Triangle: ${shape.getInfo()}`);
-                this.consoleDisplay.display(`Triangle: ${shape.getInfo()}`);
-            }
-        });
-    }
-}
-
-// ❌ НАРУШЕНИЕ DIP: Класс для генерации отчетов зависит от конкретных типов
-class BadReportGenerator {
-    private fileStorage: FileStorage;
-    private databaseStorage: DatabaseStorage;
-    private htmlDisplay: HTMLDisplay;
-
-    constructor() {
-        // ❌ НАРУШЕНИЕ DIP: Создание конкретных зависимостей внутри класса
-        this.fileStorage = new FileStorage();
-        this.databaseStorage = new DatabaseStorage();
-        this.htmlDisplay = new HTMLDisplay();
-    }
-
-    // ❌ ПРОБЛЕМА: Метод создает конкретные объекты внутри себя
-    generateReport(): void {
-        const circle = new Circle(5);
-        const rectangle = new Rectangle(4, 6);
-        const triangle = new Triangle(3, 4, 5);
-
-        const report = `
-            Shape Report:
-            - ${circle.getInfo()}: Area = ${circle.getArea().toFixed(2)}
-            - ${rectangle.getInfo()}: Area = ${rectangle.getArea().toFixed(2)}
-            - ${triangle.getInfo()}: Area = ${triangle.getArea().toFixed(2)}
-        `;
-
-        this.fileStorage.saveToFile(report);
-        this.databaseStorage.saveToDatabase(report);
-        this.htmlDisplay.display(report);
-    }
-}
-
-// Использование - демонстрация проблем
-const badCalculator = new BadShapeCalculator();
-const badComparator = new BadShapeComparator();
-const badReportGenerator = new BadReportGenerator();
-
-console.log('=== BadShapeCalculator:');
-badCalculator.calculateCircleArea(5);
-badCalculator.calculateRectangleArea(4, 6);
-badCalculator.calculateTriangleArea(3, 4, 5);
-
-console.log('\n=== BadShapeComparator:');
-badComparator.compareShapes();
-
-console.log('\n=== BadReportGenerator:');
-badReportGenerator.generateReport(); 
