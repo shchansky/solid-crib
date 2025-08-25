@@ -1,5 +1,5 @@
 // ❌ ПЛОХО: Нарушение SRP - один метод делает всё для всех фигур
-class SprBadShapeProcessor {
+class ShapeProcessor {
     radius?: number;
     width?: number;
     height?: number;
@@ -46,8 +46,7 @@ class SprBadShapeProcessor {
 }
 
 // Использование
-const sprBadCircle = new SprBadShapeProcessor(5);
-sprBadCircle.processShape('circle'); 
+const circleParams = new ShapeProcessor(5).processShape('circle'); 
+const rectangleParams = new ShapeProcessor(undefined, 4, 6).processShape('rectangle'); 
 
-const sprBadRectangle = new SprBadShapeProcessor(undefined, 4, 6);
-sprBadRectangle.processShape('rectangle'); 
+export {};

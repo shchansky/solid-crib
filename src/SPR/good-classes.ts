@@ -1,5 +1,5 @@
 // ✅ ХОРОШО: Соблюдение SRP - каждый метод делает что-то одно
-class SprGoodShapeProcessor {
+class ShapeProcessor {
     radius?: number;
     width?: number;
     height?: number;
@@ -61,8 +61,7 @@ class SprGoodShapeProcessor {
 }
 
 // Использование
-const sprGoodCircle = new SprGoodShapeProcessor(5);
-sprGoodCircle.processCircle();
+const circleParams = new ShapeProcessor(5).processCircle;
+const rectangleParams = new ShapeProcessor(undefined, 4, 6).processRectangle;
 
-const sprGoodRectangle = new SprGoodShapeProcessor(undefined, 4, 6);
-sprGoodRectangle.processRectangle(); 
+export {}

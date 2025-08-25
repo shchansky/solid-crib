@@ -84,3 +84,5 @@ calculator.displayAllInfo();
 const largestShape = calculator.findLargestShape();
 
 const areas = calculator.calculateAllAreas();
+
+export {}; // Делает файл модулем

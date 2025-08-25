@@ -1,5 +1,5 @@
 // ❌ ПЛОХО: Нарушение SRP - одна функция делает всё для всех фигур
-function sprBadProcessShape(shapeType: 'circle' | 'rectangle', radius?: number, width?: number, height?: number): {area: number, perimeter: number} {
+function ProcessShape(shapeType: 'circle' | 'rectangle', radius?: number, width?: number, height?: number): {area: number, perimeter: number} {
     if (shapeType === 'circle') {
         // Валидация круга
         if (!radius || radius <= 0) throw new Error('Invalid circle radius');
@@ -31,5 +31,7 @@ function sprBadProcessShape(shapeType: 'circle' | 'rectangle', radius?: number, 
 }
 
 // Использование
-sprBadProcessShape('circle', 5);
-sprBadProcessShape('rectangle', undefined, 4, 6);
+const circleParams = ProcessShape('circle', 5);
+const rectangleParams = ProcessShape('rectangle', undefined, 4, 6);
+
+export {}

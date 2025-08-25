@@ -33,19 +33,21 @@ function getRectanglePerimeter(width: number, height: number): number {
 
 
 // Координатор для круга
-function sprGoodProcessCircle(radius: number): {area: number, perimeter: number} {
+function processCircle(radius: number): {area: number, perimeter: number} {
     if (!isValidCircle(radius)) throw new Error('Invalid circle radius');
        
     return {area: getCircleArea(radius), perimeter: getCirclePerimeter(radius)};
 }
 
 // Координатор для прямоугольника
-function sprGoodProcessRectangle(width: number, height: number): {area: number, perimeter: number} {
+function processRectangle(width: number, height: number): {area: number, perimeter: number} {
     if (!isValidRectangle(width, height)) throw new Error('Invalid rectangle dimensions');
     
     return {area: getRectangleArea(width, height), perimeter: getRectanglePerimeter(width, height)};
 }
 
 // Использование
-sprGoodProcessCircle(5);
-sprGoodProcessRectangle(4, 6);
+const circleParams = processCircle(5);
+const rectangleParams = processRectangle(4, 6);
+
+export {}
