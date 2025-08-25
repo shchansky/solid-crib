@@ -81,3 +81,5 @@ displayShapeInfo(rectangle);
 
 console.log('\n=== Processing shapes ===');
 processShapes([circle, rectangle]); 
+
+export {}

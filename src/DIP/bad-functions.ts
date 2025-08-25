@@ -88,3 +88,5 @@ function displayShapeInfo(shape: Circle | Rectangle): string {
 
 // displayShapeInfo(circle);
 // displayShapeInfo(rectangle); 
+
+export {}

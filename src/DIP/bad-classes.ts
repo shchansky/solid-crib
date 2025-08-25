@@ -27,7 +27,7 @@
 // ❌ НАРУШЕНИЕ DIP: Конкретные классы для разных типов фигур
 // 🔄 ПРОБЛЕМА: Нет общего интерфейса - детали не зависят от абстракций
 
-class BadCircle {
+class Circle {
     constructor(private radius: number) {}
 
     getArea(): number {
@@ -43,7 +43,7 @@ class BadCircle {
     }
 }
 
-class BadRectangle {
+class Rectangle {
     constructor(private width: number, private height: number) {}
 
     getArea(): number {
@@ -59,7 +59,7 @@ class BadRectangle {
     }
 }
 
-interface DipBadShapeData {
+interface ShapeData {
     circledata: { radius: number };
     rectangledata: { width: number; height: number };
 }
@@ -70,14 +70,14 @@ interface DipBadShapeData {
 class BadShapeCalculator {
     // ❌ ПРОБЛЕМА: Зависимость от конкретных классов
     // 🔄 НАРУШЕНИЕ: Высокоуровневый модуль зависит от низкоуровневых
-    private badCircle: BadCircle;
-    private badRectangle: BadRectangle;
+    private badCircle: Circle;
+    private badRectangle: Rectangle;
 
-    constructor({circledata : {radius}, rectangledata : {width, height}} : DipBadShapeData) {
+    constructor({circledata : {radius}, rectangledata : {width, height}} : ShapeData) {
         // ❌ НАРУШЕНИЕ DIP: Создание конкретных зависимостей внутри класса
         // 🔄 НАРУШЕНИЕ: Высокоуровневый модуль создает низкоуровневые модули и зависит от них
-        this.badCircle = new BadCircle(radius);
-        this.badRectangle = new BadRectangle(width, height);
+        this.badCircle = new Circle(radius);
+        this.badRectangle = new Rectangle(width, height);
     }
 
     calculateCircleArea(): number {
@@ -88,4 +88,6 @@ class BadShapeCalculator {
         return this.badRectangle.getArea();
     }
 }
+
+export {}
 

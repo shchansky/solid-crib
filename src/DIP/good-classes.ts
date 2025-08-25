@@ -46,7 +46,7 @@ class Rectangle implements Shape {
 }
 
 // ✅ DIP: Высокоуровневый модуль зависит от абстракции
-class GoodShapeCalculator {
+class ShapeCalculator {
     // ✅ DIP: Зависимость от абстракции, а не от конкретных классов
     constructor(private shapes: Shape[]) {}
 
@@ -77,7 +77,7 @@ const circle = new Circle(5);
 const rectangle = new Rectangle(4, 6);
 
 // ✅ DIP: Высокоуровневый модуль работает с абстракциями
-const calculator = new GoodShapeCalculator([circle, rectangle]);
+const calculator = new ShapeCalculator([circle, rectangle]);
 
 calculator.displayAllInfo();
 
@@ -85,4 +85,4 @@ const largestShape = calculator.findLargestShape();
 
 const areas = calculator.calculateAllAreas();
 
-export {}; // Делает файл модулем
+export {};

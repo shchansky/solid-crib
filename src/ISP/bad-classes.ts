@@ -19,8 +19,6 @@ interface Shape {
 
     // Метод подходит только для прямоугольника
     getDiagonal(): number;
-
-
 }
 
 class Circle implements Shape {
