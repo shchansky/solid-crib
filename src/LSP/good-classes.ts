@@ -11,7 +11,7 @@
 
 // Жесткий формат: "ИМЯ: Area=ЧИСЛО, Perimeter=ЧИСЛО"
 type InfoType = `${string}: Area=${string}, Perimeter=${string}`;
-interface LspGoodShape {
+interface Shape {
     getArea(): number;
     getPerimeter(): number;
     // Жесткий формат: "ИМЯ: Area=ЧИСЛО, Perimeter=ЧИСЛО"
@@ -20,7 +20,7 @@ interface LspGoodShape {
 
 // ✅ LSP: Rectangle - истинный подтип Shape
 // Выполняет все обещания интерфейса Shape
-class LspGoodRectangle implements LspGoodShape {
+class Rectangle implements Shape {
     constructor(private width: number, private height: number) {}
 
     getArea(): number {
@@ -48,7 +48,7 @@ class LspGoodRectangle implements LspGoodShape {
 
 // ✅ LSP: Circle - истинный подтип Shape
 // Выполняет все обещания интерфейса Shape
-class LspGoodCircle implements LspGoodShape {
+class Circle implements Shape {
     constructor(private radius: number) {}
 
     getArea(): number {
@@ -76,7 +76,7 @@ class LspGoodCircle implements LspGoodShape {
 
 // ✅ LSP: Triangle - истинный подтип Shape
 // Выполняет все обещания интерфейса Shape
-class LspGoodTriangle implements LspGoodShape {
+class Triangle implements Shape {
     constructor(private side1: number, private side2: number, private side3: number) {}
 
     getArea(): number {
@@ -105,12 +105,12 @@ class LspGoodTriangle implements LspGoodShape {
 
 
 // Использование - демонстрация правильной подстановки
-const lspGoodrectangle = new LspGoodRectangle(4, 6);
-const lspGoodcircle = new LspGoodCircle(5);
-const lspGoodtriangle = new LspGoodTriangle(3, 4, 5);
+const rectangle = new Rectangle(4, 6);
+const circle = new Circle(5);
+const triangle = new Triangle(3, 4, 5);
 
 
-function processShapes(shapes: LspGoodShape[]): {summaryArea: number, summaryPerimeter: number, summaryInfo: InfoType[]} {
+function processShapes(shapes: Shape[]): {summaryArea: number, summaryPerimeter: number, summaryInfo: InfoType[]} {
 
 
     let summaryArea = 0;
@@ -131,5 +131,6 @@ function processShapes(shapes: LspGoodShape[]): {summaryArea: number, summaryPer
 
 }
 
-processShapes([lspGoodrectangle, lspGoodcircle, lspGoodtriangle])
+processShapes([rectangle, circle, triangle])
 
+export {}

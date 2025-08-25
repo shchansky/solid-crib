@@ -56,85 +56,50 @@ function createTriangle(side1: number, side2: number, side3: number): ShapeData 
 
 // ✅ LSP: Единая функция обработки работает с любым подтипом ShapeData
 // Не нужно знать конкретный тип - полиморфизм работает
-function processShape(shape: ShapeData): void {
-    console.log('Processing shape...');
-    console.log('Info:', shape.getInfo());
-    console.log('Area:', shape.getArea().toFixed(2));
-    console.log('Perimeter:', shape.getPerimeter().toFixed(2));
+function processShape(shape: ShapeData): {info: string, area: number, perimeter: number} {
+    return {
+        info: shape.getInfo(),
+        area: shape.getArea(),
+        perimeter: shape.getPerimeter()
+    }
 }
 
-// ✅ LSP: Функция для множественной обработки
+// ✅ LSP: Функция для множественной обработки с суммарными значениями
 // Работает с массивом любых объектов, реализующих ShapeData
-function processShapes(shapes: ShapeData[]): void {
-    console.log('Processing shape array...');
-    shapes.forEach((shape, index) => {
-        console.log(`\n--- Shape ${index + 1} ---`);
-        processShape(shape);
+function processShapes(shapes: ShapeData[]): {summaryArea: number, summaryPerimeter: number, summaryInfo: string[]} {
+    let summaryArea = 0;
+    let summaryPerimeter = 0;
+    let summaryInfo: string[] = [];
+
+    shapes.forEach((shape) => {
+        summaryArea += shape.getArea();
+        summaryPerimeter += shape.getPerimeter();
+        summaryInfo.push(shape.getInfo());
     });
+
+    return {
+        summaryArea,
+        summaryPerimeter,
+        summaryInfo
+    };
 }
 
-// ✅ LSP: Функция сравнения работает с любыми подтипами ShapeData
-// Не нужно знать конкретные типы - интерфейс обеспечивает подстановку
-function compareShapes(shape1: ShapeData, shape2: ShapeData): void {
-    console.log('Comparing shapes:');
-    console.log('Shape 1:', shape1.getInfo());
-    console.log('Shape 2:', shape2.getInfo());
-    console.log('Area difference:', Math.abs(shape1.getArea() - shape2.getArea()).toFixed(2));
-    console.log('Perimeter difference:', Math.abs(shape1.getPerimeter() - shape2.getPerimeter()).toFixed(2));
-}
 
-// ✅ LSP: Функция для поиска фигуры с максимальной площадью
-// Работает с любыми подтипами ShapeData
-function findLargestShape(shapes: ShapeData[]): ShapeData | null {
-    if (shapes.length === 0) return null;
-    
-    return shapes.reduce((largest, current) => {
-        return current.getArea() > largest.getArea() ? current : largest;
-    });
-}
 
-// ✅ LSP: Функция для фильтрации фигур по площади
-// Работает с любыми подтипами ShapeData
-function filterShapesByArea(shapes: ShapeData[], minArea: number): ShapeData[] {
-    return shapes.filter(shape => shape.getArea() >= minArea);
-}
 
-// ✅ LSP: Функция для сортировки фигур по периметру
-// Работает с любыми подтипами ShapeData
-function sortShapesByPerimeter(shapes: ShapeData[]): ShapeData[] {
-    return [...shapes].sort((a, b) => a.getPerimeter() - b.getPerimeter());
-}
+
 
 // Использование - демонстрация правильной подстановки
 const rectangle = createRectangle(4, 6);
 const circle = createCircle(5);
 const triangle = createTriangle(3, 4, 5);
-const square = createSquare(5);
 
-console.log('=== Individual processing:');
-processShape(rectangle);
-processShape(circle);
-processShape(triangle);
-processShape(square);
+const rectangleData = processShape(rectangle);
+const circleData = processShape(circle);
+const triangleData = processShape(triangle);
 
-console.log('\n=== Batch processing:');
-processShapes([rectangle, circle, triangle, square]);
+const shapes = processShapes([rectangle, circle, triangle]);
 
-console.log('\n=== Shape comparison:');
-compareShapes(rectangle, circle);
-compareShapes(square, triangle);
 
-console.log('\n=== Finding largest shape:');
-const largest = findLargestShape([rectangle, circle, triangle, square]);
-if (largest) {
-    console.log('Largest shape:', largest.getInfo());
-    console.log('Area:', largest.getArea().toFixed(2));
-}
 
-console.log('\n=== Filtering shapes by area (min 20):');
-const largeShapes = filterShapesByArea([rectangle, circle, triangle, square], 20);
-largeShapes.forEach(shape => console.log(shape.getInfo()));
-
-console.log('\n=== Sorting shapes by perimeter:');
-const sortedShapes = sortShapesByPerimeter([rectangle, circle, triangle, square]);
-sortedShapes.forEach(shape => console.log(`${shape.getInfo()} - Perimeter: ${shape.getPerimeter().toFixed(2)}`)); 
+export {}

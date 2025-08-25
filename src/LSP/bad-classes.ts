@@ -8,7 +8,7 @@
 // 5. Нарушение полиморфизма - код должен знать конкретный тип объекта
 
 // Базовый класс для фигур
-class LspBadShape {
+class Shape {
     protected width: number;
     protected height: number;
 
@@ -35,7 +35,7 @@ class LspBadShape {
 
 // ❌ НАРУШЕНИЕ LSP: Круг не может заменить Shape
 // Круг имеет только радиус, а не ширину и высоту
-class LspBadCircle extends LspBadShape {
+class Circle extends Shape {
     private radius: number;
 
     constructor(radius: number) {
@@ -61,7 +61,7 @@ class LspBadCircle extends LspBadShape {
 }
 
 // ❌ НАРУШЕНИЕ LSP: Треугольник не может заменить Shape
-class LspBadTriangle extends LspBadShape {
+class Triangle extends Shape {
     private side1: number;
     private side2: number;
     private side3: number;
@@ -94,7 +94,7 @@ class LspBadTriangle extends LspBadShape {
 }
 
 // Функция, которая ожидает Shape, но может сломаться с подклассами
-function lspBadProcessShape(shape: LspBadShape): {
+function lspBadProcessShape(shape: Shape): {
     info: string;
     area: number;
     perimeter: number;
@@ -108,12 +108,14 @@ function lspBadProcessShape(shape: LspBadShape): {
 }
 
 // Использование - демонстрация проблем
-const lspRectangle = new LspBadShape(4, 6);
-const lspBadCircle = new LspBadCircle(5);
-const lspBadTriangle = new LspBadTriangle(3, 4, 5);
+const lspRectangle = new Shape(4, 6);
+const lspCircle = new Circle(5);
+const lspTriangle = new Triangle(3, 4, 5);
 
 lspBadProcessShape(lspRectangle);
 
-lspBadProcessShape(lspBadCircle); // Будет работать, но поведение неожиданное
+lspBadProcessShape(lspCircle); // Будет работать, но поведение неожиданное
 
-lspBadProcessShape(lspBadTriangle); // Будет работать, но поведение неожиданное 
+lspBadProcessShape(lspTriangle); // Будет работать, но поведение неожиданное 
+
+export {}

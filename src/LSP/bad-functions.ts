@@ -9,7 +9,7 @@
 
 
 // ✅ Базовая функция с четким контрактом - аналог LspBadShape.
-function baseProcessShape(width: number, height: number): { area: number; perimeter: number; info: string } {
+function processRectangle(width: number, height: number): { area: number; perimeter: number; info: string } {
     // Контракт: width и height - это размеры прямоугольника
     return {
         area: width * height,           // Площадь = ширина × высота
@@ -19,7 +19,7 @@ function baseProcessShape(width: number, height: number): { area: number; perime
 }
 
 // ✅ Функция не нарушает LSP- квадрат, такой же прямоугольник
-const processSquare: typeof baseProcessShape = (width: number, height: number): { area: number; perimeter: number; info: string } => {
+const processSquare: typeof processRectangle = (width: number, height: number): { area: number; perimeter: number; info: string } => {
     return {
         area: width * height, 
         perimeter: 2 * (width + height), // Периметр = 2 × (ширина + высота)
@@ -29,7 +29,7 @@ const processSquare: typeof baseProcessShape = (width: number, height: number): 
 
 // ❌ НАРУШЕНИЕ LSP: Функция должна работать как processRectangle, но работает по-другому
 // Суть нарушения LSP - функция имеют одинаковую baseProcessShape, но у нее другое поведение
-const processCircle: typeof baseProcessShape = (width: number, height: number) => {
+const processCircle: typeof processRectangle = (width: number, height: number) => {
     // ❌ Нарушение контракта processRectangle:
     // - width интерпретируется как radius
     // - height игнорируется
@@ -44,7 +44,7 @@ const processCircle: typeof baseProcessShape = (width: number, height: number) =
 
 // ❌ НАРУШЕНИЕ LSP: Функция должна работать как processRectangle, но работает по-другому
 // Суть нарушения LSP - функция имеют одинаковую baseProcessShape, но у нее другое поведение
-const processTriangle: typeof baseProcessShape = (width: number, height: number) => {
+const processTriangle: typeof processRectangle = (width: number, height: number) => {
     // ❌ Нарушение контракта processRectangle:
     // - width и height интерпретируются как стороны треугольника
     // - используется формула Герона вместо простого умножения
@@ -68,7 +68,7 @@ const processTriangle: typeof baseProcessShape = (width: number, height: number)
 
 
 // Функция, которая ожидает функцию с сигнатурой baseProcessShape, но может сломаться с функциями-обертками
-function lspBadProcessShapes(processor: typeof baseProcessShape, shapes: Array<{width: number, height: number}>): {
+function processShapes(processor: typeof processRectangle, shapes: Array<{width: number, height: number}>): {
     totalArea: number;
     totalPerimeter: number;
     infoArray: string[];
@@ -121,19 +121,21 @@ const lspShapes = [
 ];
 
 // ✅ Базовая функция работает корректно
-const rectangleResult = lspBadProcessShapes(baseProcessShape, lspShapes);
+const rectangleResult = processShapes(processRectangle, lspShapes);
 
 // ❌ НАРУШЕНИЕ LSP: функция-обертка для круга нарушает контракт processRectangle
 // Ожидается: area = width * height, perimeter = 2 * (width + height)
 // Получается: area = π * width², perimeter = 2π * width
-const circleResult = lspBadProcessShapes(processCircle, lspShapes);
+const circleResult = processShapes(processCircle, lspShapes);
 
 // ❌ НАРУШЕНИЕ LSP: функция-обертка для треугольника нарушает контракт processRectangle
 // Ожидается: area = width * height, perimeter = 2 * (width + height)
 // Получается: area = формула Герона, perimeter = sum(sides)
-const triangleResult = lspBadProcessShapes(processTriangle, lspShapes);
+const triangleResult = processShapes(processTriangle, lspShapes);
 
 // ❌ НАРУШЕНИЕ LSP: функция-обертка для квадрата нарушает контракт processRectangle
 // Ожидается: всегда работает без исключений
 // Получается: может выбросить исключение для прямоугольников
-const squareResult = lspBadProcessShapes(processSquare, lspShapes);
+const squareResult = processShapes(processSquare, lspShapes);
+
+export {}
