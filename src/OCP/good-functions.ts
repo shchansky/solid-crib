@@ -13,31 +13,44 @@
 // 4. Легкость тестирования - тестируем только новые фабричные функции
 // 5. Безопасность - нет риска сломать существующий функционал
 
-// ✅ OCP: Тип для фигуры - ЗАКРЫТ для изменения
+// ✅ OCP: Базовый интерфейс для фигуры - ЗАКРЫТ для изменения
 // 💡 ПРЕИМУЩЕСТВО: Этот тип никогда не меняется при добавлении новых фигур
 // 🎯 РЕЗУЛЬТАТ: Стабильная основа для всех фигур
-type ShapeData = {
-    type: string;
+interface ShapeData {
     calculateArea: () => number;
     calculatePerimeter: () => number;
 };
 
+//Расширяем базовый интерфейс для круга
+interface CircleShapeData extends ShapeData {
+    radius: number;
+}
+
+//Расширяем базовый интерфейс для прямоугольника
+interface RectangleShapeData extends ShapeData {
+    width: number;
+    height: number;
+}
+
 // ✅ OCP: Конкретные фабричные функции - ОТКРЫТЫ для расширения
 // 💡 ПРЕИМУЩЕСТВО: Каждая функция создает объект типа ShapeData и может быть добавлена без изменения существующего кода
 // 🎯 РЕЗУЛЬТАТ: Легкость добавления новых типов
-function createCircle(radius: number): ShapeData {
+
+
+function createCircle(radius: number): CircleShapeData {
     return {
-        type: 'Circle',
         calculateArea: () => Math.PI * radius * radius,
-        calculatePerimeter: () => 2 * Math.PI * radius
+        calculatePerimeter: () => 2 * Math.PI * radius,
+        radius
     };
 }
 
-function createRectangle(width: number, height: number): ShapeData {
+function createRectangle(width: number, height: number): RectangleShapeData {
     return {
-        type: 'Rectangle',
         calculateArea: () => width * height,
-        calculatePerimeter: () => 2 * (width + height)
+        calculatePerimeter: () => 2 * (width + height),
+        width,
+        height
     };
 }
 
@@ -67,50 +80,10 @@ function processShapes(shapes: ShapeData[]): void {
 const circle = createCircle(5);
 const rectangle = createRectangle(4, 6);
 
-// ✅ OCP: Можем добавить еще фигуры и все будет работать без изменения существующего кода
-const shapes = [circle, rectangle];
-processShapes(shapes);
+// ✅ ДЕМОНСТРАЦИЯ: Можем добавить еще фигуры и все будет работать без изменения существующего кода
+processShapes([circle, rectangle]);
 // Или обрабатывать по-отдельности
 processShape(circle);
 processShape(rectangle);
-
-// ✅ ДЕМОНСТРАЦИЯ: Легкость добавления новых фигур
-// 💡 ПРЕИМУЩЕСТВО: Можно добавить Triangle без изменения существующих функций
-// 🎯 РЕЗУЛЬТАТ: Принцип открытости/закрытости работает
-function createTriangle(side1: number, side2: number, side3: number): ShapeData {
-    return {
-        type: 'Triangle',
-        calculateArea: () => {
-            const s = (side1 + side2 + side3) / 2;
-            return Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
-        },
-        calculatePerimeter: () => side1 + side2 + side3
-    };
-}
-
-function createSquare(side: number): ShapeData {
-    return {
-        type: 'Square',
-        calculateArea: () => side * side,
-        calculatePerimeter: () => 4 * side
-    };
-}
-
-// ✅ Новая фигура работает без изменения существующих функций
-const triangle = createTriangle(3, 4, 5);
-const square = createSquare(5);
-const allShapes = [circle, rectangle, triangle, square];
-processShapes(allShapes);
-
-// ✅ ДЕМОНСТРАЦИЯ: Легкость тестирования
-// 💡 ПРЕИМУЩЕСТВО: Можно создать мок-объекты для тестирования
-// 🎯 РЕЗУЛЬТАТ: Изолированное тестирование компонентов
-function createMockShape(): ShapeData {
-    return {
-        type: 'Mock',
-        calculateArea: () => 10,
-        calculatePerimeter: () => 20
-    };
-}
 
 export {}

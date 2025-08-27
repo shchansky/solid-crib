@@ -95,18 +95,18 @@ class ShapeCalculator {
 // ✅ OCP: Использование - новые фигуры добавляются без изменения существующего кода
 // 💡 ПРЕИМУЩЕСТВО: Калькулятор работает с любыми объектами, реализующими интерфейс Shape
 // 🎯 РЕЗУЛЬТАТ: Гибкость и расширяемость
-const ocpGoodCalculator = new ShapeCalculator();
+const calculator = new ShapeCalculator();
 
 const _circle = new Circle(5);
 const _rectangle = new Rectangle(4, 6);
 const _triangle = new Triangle(4, 6, 5, 7);
 
-ocpGoodCalculator.calculate([_circle, _rectangle, _triangle]);
+calculator.calculate([_circle, _rectangle, _triangle]);
 
 // ✅ ДЕМОНСТРАЦИЯ: Легкость добавления новых фигур
 // 💡 ПРЕИМУЩЕСТВО: Можно добавить Square без изменения существующего кода
 // 🎯 РЕЗУЛЬТАТ: Принцип открытости/закрытости работает
-class OcpGoodSquare implements Shape {
+class Square implements Shape {
     constructor(private side: number) {}
     
     calculateArea(): number {
@@ -119,8 +119,8 @@ class OcpGoodSquare implements Shape {
 }
 
 // ✅ Новая фигура работает без изменения существующего кода
-const _square = new OcpGoodSquare(5);
-ocpGoodCalculator.calculate([_circle, _rectangle, _triangle, _square]);
+const _square = new Square(5);
+calculator.calculate([_circle, _rectangle, _triangle, _square]);
 
 export {}
 
