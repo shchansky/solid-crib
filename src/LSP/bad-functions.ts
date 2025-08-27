@@ -29,7 +29,7 @@ function processRectangle(width: number, height: number): { area: number; perime
 // ✅ Функция не нарушает LSP - квадрат, такой же прямоугольник
 // 💡 ПРЕИМУЩЕСТВО: Соблюдает контракт processRectangle
 // 🎯 РЕЗУЛЬТАТ: Может заменить processRectangle
-const processSquare: typeof processRectangle = (width: number, height: number): { area: number; perimeter: number; info: string } => {
+const processSquare: typeof processRectangle = (width: number, height: number) => {
     return {
         area: width * height, 
         perimeter: 2 * (width + height), // Периметр = 2 × (ширина + высота)

@@ -153,28 +153,3 @@ const circle = new Circle(5);
 const triangle = new Triangle(3, 4, 5);
 
 processShapes([rectangle, circle, triangle]);
-
-// ✅ ДЕМОНСТРАЦИЯ: Легкость добавления новых типов
-// 💡 ПРЕИМУЩЕСТВО: Можно добавить Square без изменения существующих функций
-// 🎯 РЕЗУЛЬТАТ: Принцип подстановки Лисков работает
-class Square implements Shape {
-    constructor(private side: number) {}
-    
-    getArea(): number {
-        return this.side * this.side;
-    }
-    
-    getPerimeter(): number {
-        return 4 * this.side;
-    }
-    
-    getInfo(): `${string}: Area=${string}, Perimeter=${string}` {
-        return `Square: Area=${this.getArea().toFixed(2)}, Perimeter=${this.getPerimeter().toFixed(2)}`;
-    }
-}
-
-// ✅ Новая фигура работает без изменения существующих функций
-const square = new Square(5);
-processShapes([rectangle, circle, triangle, square]);
-
-export {}
