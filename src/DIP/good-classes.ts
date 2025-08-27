@@ -91,19 +91,9 @@ class ShapeCalculator {
     }
 }
 
-// ✅ ДЕМОНСТРАЦИЯ ПРЕИМУЩЕСТВ: Легкость тестирования
-// 💡 ПРЕИМУЩЕСТВО: Можно создать мок-объекты для тестирования
-// 🎯 РЕЗУЛЬТАТ: Изолированное тестирование компонентов
-class MockShape implements Shape {
-    constructor(private area: number, private info: string) {}
-    
-    getArea(): number { return this.area; }
-    getInfo(): string { return this.info; }
-}
+// ✅ ДЕМОНСТРАЦИЯ
 
-// Использование - демонстрация правильного применения DIP
-
-// Создание фигур (в реальном приложении это делается через DI контейнер)
+// Создание фигур (лучше было бы сделать через DI контейнер)
 const circle = new Circle(5);
 const rectangle = new Rectangle(4, 6);
 
@@ -115,25 +105,5 @@ const calculator = new ShapeCalculator([circle, rectangle]);
 const largestShape = calculator.findLargestShape();
 
 const areas = calculator.calculateAllAreas();
-
-// ✅ ДЕМОНСТРАЦИЯ: Легкость добавления новых типов
-// 💡 ПРЕИМУЩЕСТВО: Можно добавить Triangle без изменения ShapeCalculator
-// 🎯 РЕЗУЛЬТАТ: Принцип открытости/закрытости соблюдается
-class Triangle implements Shape {
-    constructor(private side1: number, private side2: number, private side3: number) {}
-    
-    getArea(): number {
-        const s = (this.side1 + this.side2 + this.side3) / 2;
-        return Math.sqrt(s * (s - this.side1) * (s - this.side2) * (s - this.side3));
-    }
-    
-    getInfo(): string {
-        return `Triangle: ${this.side1},${this.side2},${this.side3}`;
-    }
-}
-
-// ✅ Новая фигура работает без изменения существующего кода
-const triangle = new Triangle(3, 4, 5);
-const calculatorWithTriangle = new ShapeCalculator([circle, rectangle, triangle]);
 
 export {};

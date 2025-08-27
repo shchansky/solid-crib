@@ -59,11 +59,11 @@ function calculateArea(shape: Shape): number {
     return shape.getArea();
 }
 
-function displayShapeInfo(shape: Shape): void {
+function displayShapeInfo(shape: Shape): string {
     // ✅ Работаем с абстракцией Shape, а не с конкретными типами
     // 💡 ПРЕИМУЩЕСТВО: Полиморфизм - работает с любыми фигурами
     // 🎯 РЕЗУЛЬТАТ: Не нужно знать конкретный тип фигуры
-    console.log(`${shape.getInfo()} - Area: ${shape.getArea().toFixed(2)}`);
+   return `${shape.getInfo()} - Area: ${shape.getArea().toFixed(2)}`;
 }
 
 // ✅ DIP: Функция работает с абстракцией
@@ -77,20 +77,19 @@ function findLargestShape(shapes: Shape[]): Shape | null {
     });
 }
 
-// ✅ DIP: Функция для обработки фигур - зависит от абстракций
-// 💡 ПРЕИМУЩЕСТВО: Зависимости передаются как параметры
-// 🎯 РЕЗУЛЬТАТ: Легко тестировать с мок-объектами
-function processShapes(shapes: Shape[]): void {
-    console.log('Processing shapes...');
+function processShapes(shapes: Shape[]): { infos: string[], largest: Shape | null } {
+    const infos: string[] = [];
     shapes.forEach(shape => {
-        displayShapeInfo(shape);
+        infos.push(displayShapeInfo(shape));
     });
     
     const largest = findLargestShape(shapes);
-    if (largest) {
-        console.log(`\nLargest shape: ${largest.getInfo()}`);
-    }
+
+    return { infos, largest };
+
 }
+
+
 
 // ✅ ДЕМОНСТРАЦИЯ ПРЕИМУЩЕСТВ: Легкость тестирования
 // 💡 ПРЕИМУЩЕСТВО: Можно создать мок-объекты для тестирования
@@ -103,36 +102,15 @@ function createMockShape(area: number, info: string): Shape {
 }
 
 // Использование - демонстрация правильного применения DIP
-
-// Создание фигур (в реальном приложении это делается через DI контейнер)
+// Создание фигур (лучше было бы сделать через DI контейнер)
 const circle = createCircle(5);
 const rectangle = createRectangle(4, 6);
 
 // ✅ DIP: Высокоуровневые функции работают с абстракциями
 // 💡 ПРЕИМУЩЕСТВО: Не нужно знать конкретные типы
 // 🎯 РЕЗУЛЬТАТ: Гибкость и расширяемость
-console.log('=== Good DIP Example ===');
 displayShapeInfo(circle);
 displayShapeInfo(rectangle);
-
-console.log('\n=== Processing shapes ===');
 processShapes([circle, rectangle]);
-
-// ✅ ДЕМОНСТРАЦИЯ: Легкость добавления новых типов
-// 💡 ПРЕИМУЩЕСТВО: Можно добавить Triangle без изменения существующих функций
-// 🎯 РЕЗУЛЬТАТ: Принцип открытости/закрытости соблюдается
-function createTriangle(side1: number, side2: number, side3: number): Shape {
-    return {
-        getArea: () => {
-            const s = (side1 + side2 + side3) / 2;
-            return Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
-        },
-        getInfo: () => `Triangle: ${side1},${side2},${side3}`
-    };
-}
-
-// ✅ Новая фигура работает без изменения существующих функций
-const triangle = createTriangle(3, 4, 5);
-processShapes([circle, rectangle, triangle]);
 
 export {}

@@ -132,11 +132,11 @@ class CreateShapeFactory {
 // ❌ ДЕМОНСТРАЦИЯ ПРОБЛЕМ: Избыточность данных
 // 💡 ПРОБЛЕМА: Объекты содержат ненужные поля
 // 🎯 РЕЗУЛЬТАТ: Путаница и избыточность
-const ispBadCircleData = CreateShapeFactory.circle(10);
-const ispBadRectangleData = CreateShapeFactory.rectangle(4, 6);
+const circleData = CreateShapeFactory.circle(10);
+const rectangleData = CreateShapeFactory.rectangle(4, 6);
 
 // ❌ ПРОБЛЕМА: Нельзя легко определить, какие поля действительно нужны
-// console.log(isBadCircleData.diagonal); // 0 - бессмысленное значение
-// console.log(isBadRectangleData.diameter); // 0 - бессмысленное значение
+console.log(circleData.diagonal); // 0 - бессмысленное значение
+console.log(rectangleData.diameter); // 0 - бессмысленное значение
 
 export {}

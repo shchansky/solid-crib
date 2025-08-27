@@ -92,7 +92,7 @@ class Rectangle implements RectangleShape {
 // ✅ ISP: Фабричные функции создают объекты только с нужными методами
 // 💡 ПРЕИМУЩЕСТВО: Каждый объект содержит только релевантные поля
 // 🎯 РЕЗУЛЬТАТ: Нет избыточности данных
-class IspGoodCreateShapeFactory {
+class CreateShapeFactory {
      static getCircleData(radius: number) {
         const circle = new Circle(radius);
         return {
@@ -117,8 +117,8 @@ class IspGoodCreateShapeFactory {
 // ✅ ДЕМОНСТРАЦИЯ ПРЕИМУЩЕСТВ: Нет избыточности данных
 // 💡 ПРЕИМУЩЕСТВО: Каждый объект содержит только релевантные поля
 // 🎯 РЕЗУЛЬТАТ: Четкая структура данных
-const ispGoodCircleData1 = IspGoodCreateShapeFactory.getCircleData(10);
-const ispGoodRectangleData1 = IspGoodCreateShapeFactory.getRectangleData(4, 6);
+const circleData = CreateShapeFactory.getCircleData(10);
+const rectangleData = CreateShapeFactory.getRectangleData(4, 6);
 
 // ✅ ДЕМОНСТРАЦИЯ: Легкость добавления новых типов
 // 💡 ПРЕИМУЩЕСТВО: Можно легко добавить Triangle с собственным интерфейсом

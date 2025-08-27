@@ -66,7 +66,7 @@ function createRectangle(width: number, height: number): RectangleShape {
 // ✅ ISP: Фабрика создает объекты только с нужными полями
 // 💡 ПРЕИМУЩЕСТВО: Каждый объект содержит только релевантные поля
 // 🎯 РЕЗУЛЬТАТ: Нет избыточности данных
-const ispGoodCreateShapeFactory = {
+const createShapeFactory = {
     // Фабричная функция для круга
     circle: (radius: number) => {
         const circle = createCircle(radius);
@@ -93,44 +93,8 @@ const ispGoodCreateShapeFactory = {
 // ✅ ДЕМОНСТРАЦИЯ ПРЕИМУЩЕСТВ: Нет избыточности данных
 // 💡 ПРЕИМУЩЕСТВО: Каждый объект содержит только релевантные поля
 // 🎯 РЕЗУЛЬТАТ: Четкая структура данных
-const ispGoodCircleData = ispGoodCreateShapeFactory.circle(10);
-const ispGoodRectangleData = ispGoodCreateShapeFactory.rectangle(4, 6);
+const circleData = createShapeFactory.circle(10);
+const rectangleData = createShapeFactory.rectangle(4, 6);
 
-// ✅ ДЕМОНСТРАЦИЯ: Легкость добавления новых типов
-// 💡 ПРЕИМУЩЕСТВО: Можно легко добавить Triangle с собственным типом
-// 🎯 РЕЗУЛЬТАТ: Расширяемость без изменения существующих типов
-type TriangleShape = Shape & {
-    getHeight: () => number; // ✅ Только для треугольника
-};
-
-function createTriangle(side1: number, side2: number, side3: number): TriangleShape {
-    return {
-        getArea: () => {
-            const s = (side1 + side2 + side3) / 2;
-            return Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
-        },
-        getPerimeter: () => side1 + side2 + side3,
-        getInfo: () => `Triangle: ${side1},${side2},${side3}`,
-        getHeight: () => {
-            const area = (() => {
-                const s = (side1 + side2 + side3) / 2;
-                return Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
-            })();
-            return (2 * area) / side1; // ✅ Осмысленная реализация для треугольника
-        }
-    };
-}
-
-// ✅ ДЕМОНСТРАЦИЯ: Легкость тестирования
-// 💡 ПРЕИМУЩЕСТВО: Можно создавать мок-объекты только с нужными методами
-// 🎯 РЕЗУЛЬТАТ: Изолированное тестирование
-function createMockCircleShape(): CircleShape {
-    return {
-        getArea: () => 10,
-        getPerimeter: () => 20,
-        getInfo: () => 'Mock Circle',
-        getDiametr: () => 5, // ✅ Только нужные методы
-    };
-}
 
 export {}
