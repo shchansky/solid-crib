@@ -84,29 +84,4 @@ function processRectangle(width: number, height: number): {area: number, perimet
 const circleParams = processCircle(5);
 const rectangleParams = processRectangle(4, 6);
 
-// ✅ ДЕМОНСТРАЦИЯ: Легкость добавления новых функций
-// 💡 ПРЕИМУЩЕСТВО: Можно легко добавить новые функции без изменения существующих
-// 🎯 РЕЗУЛЬТАТ: Расширяемость без нарушения SRP
-
-// ✅ SRP: Только валидация треугольника
-function isValidTriangle(side1: number, side2: number, side3: number): boolean {
-    return side1 > 0 && side2 > 0 && side3 > 0 && 
-           side1 + side2 > side3 && 
-           side2 + side3 > side1 && 
-           side1 + side3 > side2;
-}
-
-// ✅ SRP: Только расчет площади треугольника
-function getTriangleArea(side1: number, side2: number, side3: number): number {
-    const s = (side1 + side2 + side3) / 2;
-    return Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
-}
-
-// ✅ SRP: Координатор для треугольника
-function processTriangle(side1: number, side2: number, side3: number): {area: number, perimeter: number} {
-    if (!isValidTriangle(side1, side2, side3)) throw new Error('Invalid triangle dimensions');
-    
-    return {area: getTriangleArea(side1, side2, side3), perimeter: side1 + side2 + side3};
-}
-
 export {}

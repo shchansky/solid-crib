@@ -100,29 +100,4 @@ class ShapeProcessor {
 const circleParams = new ShapeProcessor(5).processCircle();
 const rectangleParams = new ShapeProcessor(undefined, 4, 6).processRectangle();
 
-// ✅ ДЕМОНСТРАЦИЯ: Легкость добавления новых методов
-// 💡 ПРЕИМУЩЕСТВО: Можно легко добавить новые методы без изменения существующих
-// 🎯 РЕЗУЛЬТАТ: Расширяемость без нарушения SRP
-class ExtendedShapeProcessor extends ShapeProcessor {
-    // ✅ SRP: Только валидация треугольника
-    private isValidTriangle(): boolean {
-        return !!this.width && !!this.height && 
-               this.width > 0 && this.height > 0;
-    }
-
-    // ✅ SRP: Только расчет площади треугольника
-    private calculateTriangleArea(): number {
-        return (this.width! * this.height!) / 2;
-    }
-
-    // ✅ SRP: Координатор для треугольника
-    public processTriangle(): {area: number} {
-        if (!this.isValidTriangle()) {
-            throw new Error('Invalid triangle dimensions');
-        }
-
-        return {area: this.calculateTriangleArea()};
-    }
-}
-
 export {}
