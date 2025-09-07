@@ -47,14 +47,24 @@ class ShapeProcessor {
     // 💡 ПРЕИМУЩЕСТВО: Одна ответственность - математический расчет
     // 🎯 РЕЗУЛЬТАТ: Легко тестировать и изменять формулу
     private calculateCircleArea(): number {
-        return Math.PI * this.radius! * this.radius!;
+
+        if(!this.radius) {
+            throw new Error('Invalid circle radius');
+        }
+
+        return Math.PI * this.radius * this.radius;
     }
 
     // ✅ SRP: Только расчет периметра круга
     // 💡 ПРЕИМУЩЕСТВО: Одна ответственность - математический расчет
     // 🎯 РЕЗУЛЬТАТ: Легко тестировать и изменять формулу
     private calculateCirclePerimeter(): number {
-        return 2 * Math.PI * this.radius!;
+
+        if(!this.radius) {
+            throw new Error('Invalid circle radius');
+        }
+
+        return 2 * Math.PI * this.radius;
     }
 
     // ✅ SRP: Только расчет площади прямоугольника

@@ -155,4 +155,15 @@ const triangleResult = processShapes(processTriangle, lspShapes);
 // 🎯 РЕЗУЛЬТАТ: Получается: может выбросить исключение для прямоугольников
 const squareResult = processShapes(processSquare, lspShapes);
 
+// 🧪 Юнит‑тест (псевдо): проверка контракта для функций‑заменителей
+// function assertRectangleProcessor(proc: typeof processRectangle) {
+//   const { area, perimeter, info } = proc(4, 6);
+//   if (area !== 24 || perimeter !== 20 || !/^Rectangle: 4x6$/.test(info)) {
+//     throw new Error('Нарушение контракта processRectangle');
+//   }
+// }
+// assertRectangleProcessor(processRectangle); // ✅
+// // assertRectangleProcessor(processCircle);   // ❌ нарушает контракт
+// // assertRectangleProcessor(processTriangle); // ❌ нарушает контракт
+
 export {}

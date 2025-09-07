@@ -33,7 +33,7 @@ interface Shape {
 // 💡 ПРЕИМУЩЕСТВО: Специализированный интерфейс с нужными методами
 // 🎯 РЕЗУЛЬТАТ: Circle реализует только то, что ему нужно
 interface CircleShape extends Shape {
-    getDiametr(): number; // ✅ Только для круга
+    getDiameter(): number; // ✅ Только для круга
 }
 
 // ✅ ISP: Расширенный интерфейс для прямоугольника - только методы, специфичные для прямоугольника
@@ -46,7 +46,7 @@ interface RectangleShape extends Shape {
 // ✅ ISP: Круг реализует только нужные интерфейсы
 // 💡 ПРЕИМУЩЕСТВО: Не нужно реализовывать ненужные методы
 // 🎯 РЕЗУЛЬТАТ: Чистая и понятная реализация
-class Circle implements Shape {
+class Circle implements CircleShape {
     constructor(private radius: number) {}
 
     getArea() {
@@ -61,7 +61,7 @@ class Circle implements Shape {
         return `Circle: radius=${this.radius}`;
     }
 
-    getDiametr() {
+    getDiameter() {
        return this.radius * 2; // ✅ Осмысленная реализация для круга
     }
 }
@@ -69,7 +69,7 @@ class Circle implements Shape {
 // ✅ ISP: Прямоугольник реализует только нужные интерфейсы
 // 💡 ПРЕИМУЩЕСТВО: Не нужно реализовывать ненужные методы
 // 🎯 РЕЗУЛЬТАТ: Чистая и понятная реализация
-class Rectangle implements Shape {
+class Rectangle implements RectangleShape {
     constructor(private width: number, private height: number) {}
 
     getArea() {
@@ -99,7 +99,7 @@ class CreateShapeFactory {
             area: circle.getArea(),
             perimeter: circle.getPerimeter(),
             info: circle.getInfo(),
-            diameter: circle.getDiametr(), // ✅ Только нужные поля для круга
+            diameter: circle.getDiameter(), // ✅ Только нужные поля для круга
         };
     }
 

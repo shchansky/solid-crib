@@ -77,8 +77,8 @@ class ShapeCalculator {
     // ✅ OCP: Метод работает с абстракцией Shape
     // 💡 ПРЕИМУЩЕСТВО: Не нужно знать конкретные типы фигур
     // 🎯 РЕЗУЛЬТАТ: Полиморфизм работает автоматически
-    calculate(shape: Shape[]): {area: number, perimeter: number}[] {
-        return shape.map(shape => ({
+    calculate(shapes: Shape[]): {area: number, perimeter: number}[] {
+        return shapes.map(shape => ({
             area: shape.calculateArea(),
             perimeter: shape.calculatePerimeter(),
         }));

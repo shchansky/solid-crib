@@ -91,7 +91,7 @@ class ShapeCalculator {
     }
 }
 
-// ✅ ДЕМОНСТРАЦИЯ
+// ✅ ДЕМОНСТРАЦИЯ 1
 
 // Создание фигур (лучше было бы сделать через DI контейнер)
 const circle = new Circle(5);
@@ -105,5 +105,18 @@ const calculator = new ShapeCalculator([circle, rectangle]);
 const largestShape = calculator.findLargestShape();
 
 const areas = calculator.calculateAllAreas();
+
+// ✅ ДЕМОНСТРАЦИЯ 2: Моки через инъекцию зависимостей
+// 💡 ИДЕЯ: Передаем фейковую реализацию Shape без изменения кода калькулятора
+// 🎯 РЕЗУЛЬТАТ: Легкость тестирования и изоляции
+const mock: Shape = {
+    getArea: () => 42,
+    getInfo: () => 'Mock'
+};
+
+const testCalculator = new ShapeCalculator([mock]);
+testCalculator.calculateAllAreas();
+testCalculator.getTotalArea();
+testCalculator.findLargestShape();
 
 export {};

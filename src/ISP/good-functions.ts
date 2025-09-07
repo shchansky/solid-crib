@@ -33,7 +33,7 @@ type Shape = {
 
 // Расширенный тип для круга - только методы, специфичные для круга
 type CircleShape = Shape & {
-    getDiametr: () => number; // ✅ Только для круга
+    getDiameter: () => number; // ✅ Только для круга
 };
 
 // Расширенный тип для прямоугольника - только методы, специфичные для прямоугольника
@@ -50,7 +50,7 @@ function createCircle(radius: number): CircleShape {
         getArea: () => Math.PI * radius * radius,
         getPerimeter: () => 2 * Math.PI * radius,
         getInfo: () => `Circle: radius=${radius}`,
-        getDiametr: () => radius * 2, // ✅ Осмысленная реализация для круга
+        getDiameter: () => radius * 2, // ✅ Реализация для круга
     };
 }
 
@@ -59,7 +59,7 @@ function createRectangle(width: number, height: number): RectangleShape {
         getArea: () => width * height,
         getPerimeter: () => 2 * (width + height),
         getInfo: () => `Rectangle: ${width}x${height}`,
-        getDiagonal: () => Math.sqrt(width * width + height * height), // ✅ Осмысленная реализация для прямоугольника
+        getDiagonal: () => Math.sqrt(width * width + height * height), // ✅ Реализация для прямоугольника
     };
 }
 
@@ -74,7 +74,7 @@ const createShapeFactory = {
             area: circle.getArea(),
             perimeter: circle.getPerimeter(),
             info: circle.getInfo(),
-            diameter: circle.getDiametr(), // ✅ Только нужные поля для круга
+            diameter: circle.getDiameter(), // ✅ Только нужные поля для круга
         };
     },
     

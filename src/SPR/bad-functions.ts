@@ -17,7 +17,7 @@
 // ❌ НАРУШЕНИЕ SRP: Функция с множественными ответственностями
 // 💡 ЧТО НЕ ТАК: Функция знает о всех типах фигур и делает всё для них
 // 🎯 КАК ИСПРАВИТЬ: Разделить на отдельные функции для каждой фигуры
-function ProcessShape(shapeType: 'circle' | 'rectangle', radius?: number, width?: number, height?: number): {area: number, perimeter: number} {
+function processShape(shapeType: 'circle' | 'rectangle', radius?: number, width?: number, height?: number): {area: number, perimeter: number} {
     // ❌ НАРУШЕНИЕ SRP: Одна функция обрабатывает все типы фигур
     // 💡 ПРОБЛЕМЫ:
     //    - Валидация разных типов фигур
@@ -58,8 +58,8 @@ function ProcessShape(shapeType: 'circle' | 'rectangle', radius?: number, width?
 // ❌ ДЕМОНСТРАЦИЯ ПРОБЛЕМ: Сложность использования
 // 💡 ПРОБЛЕМА: Одна функция пытается обработать все типы фигур
 // 🎯 РЕЗУЛЬТАТ: Путаница и сложность
-const circleParams = ProcessShape('circle', 5);
-const rectangleParams = ProcessShape('rectangle', undefined, 4, 6);
+const circleParams = processShape('circle', 5);
+const rectangleParams = processShape('rectangle', undefined, 4, 6);
 
 
 export {}
