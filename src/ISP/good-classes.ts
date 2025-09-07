@@ -46,7 +46,7 @@ interface RectangleShape extends Shape {
 // ✅ ISP: Круг реализует только нужные интерфейсы
 // 💡 ПРЕИМУЩЕСТВО: Не нужно реализовывать ненужные методы
 // 🎯 РЕЗУЛЬТАТ: Чистая и понятная реализация
-class Circle implements CircleShape {
+class Circle implements Shape {
     constructor(private radius: number) {}
 
     getArea() {
@@ -69,7 +69,7 @@ class Circle implements CircleShape {
 // ✅ ISP: Прямоугольник реализует только нужные интерфейсы
 // 💡 ПРЕИМУЩЕСТВО: Не нужно реализовывать ненужные методы
 // 🎯 РЕЗУЛЬТАТ: Чистая и понятная реализация
-class Rectangle implements RectangleShape {
+class Rectangle implements Shape {
     constructor(private width: number, private height: number) {}
 
     getArea() {
