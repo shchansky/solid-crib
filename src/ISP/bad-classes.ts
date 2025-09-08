@@ -12,7 +12,6 @@
 //    - Классы должны реализовывать методы, которые не имеют смысла
 //    - Возвращают бессмысленные значения (0, null, undefined)
 
-
 interface Shape {
   getArea(): number;
   getPerimeter(): number;
