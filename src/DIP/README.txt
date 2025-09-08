@@ -1,4 +1,4 @@
-# 🔄 Dependency Inversion Principle (DIP)
+# 📋 Dependency Inversion Principle (DIP)
 
 ## 🎯 Что это такое?
 
