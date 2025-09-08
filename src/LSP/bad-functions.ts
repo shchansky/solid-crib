@@ -1,159 +1,208 @@
-// ❌ ПЛОХО: Нарушение LSP - функции-обертки не могут заменить базовую функцию
+// ❌ ПЛОХО: Нарушение LSP - функции-обработчики не могут заменить базовую функцию
 //
-// 🔄 НАРУШЕНИЕ ОСНОВНОЙ ИДЕИ LSP:
-// 1. ❌ НАРУШЕНИЕ КОНТРАКТА - функции должны работать как processRectangle, но работают по-другому
-// 2. ❌ НАРУШЕНИЕ ПРИНЦИПА ПОДСТАНОВКИ - функции не могут быть взаимозаменяемы
-// 3. ❌ НЕОЖИДАННОЕ ПОВЕДЕНИЕ - функции интерпретируют параметры по-разному
-// 4. ❌ СЛОЖНОСТЬ ТЕСТИРОВАНИЯ - нужно тестировать каждую функцию отдельно
-// 5. ❌ НАРУШЕНИЕ ПОЛИМОРФИЗМА - код должен знать конкретную функцию
+// 1. ❌ НАРУШЕНИЕ КОНТРАКТА - функции-обработчики требуют более строгие условия
+// 2. ❌ НАРУШЕНИЕ ПРИНЦИПА ПОДСТАНОВКИ - функции не взаимозаменяемы
+// 3. ❌ НЕОЖИДАННЫЕ ИСКЛЮЧЕНИЯ - функции бросают ошибки при валидных входных данных
+// 4. ❌ СУЖЕНИЕ ПРЕДУСЛОВИЙ - функции принимают не все валидные входы базовой функции
+// 5. ❌ НАРУШЕНИЕ ПОЛИМОРФИЗМА - код должен знать конкретную функцию для работы
 
-
-// ✅ Базовая функция с четким контрактом 
-function processRectangle(width: number, height: number): { area: number; perimeter: number; info: string } {
-    // Контракт: width и height - это размеры прямоугольника
-    return {
-        area: width * height,           // Площадь = ширина × высота
-        perimeter: 2 * (width + height), // Периметр = 2 × (ширина + высота)
-        info: `Rectangle: ${width}x${height}` // Информация о прямоугольнике
-    };
+interface ShapeData {
+  getArea(): number;
+  getPerimeter(): number;
+  // Жесткий формат: "ИМЯ: Area=ЧИСЛО, Perimeter=ЧИСЛО"
+  getInfo(): `${string}: Area=${string}, Perimeter=${string}`;
 }
 
-// ✅ Функция не нарушает LSP - квадрат, такой же прямоугольник
-const processSquare: typeof processRectangle = (width: number, height: number) => {
-    return {
-        area: width * height, 
-        perimeter: 2 * (width + height), // Периметр = 2 × (ширина + высота)
-        info: `Rectangle: ${width}x${height}` // Информация о прямоугольнике
-    };
+function createRectangle(width: number, height: number): ShapeData {
+  return {
+    getArea: () => width * height,
+    getPerimeter: () => 2 * (width + height),
+    getInfo: () =>
+      `Rectangle: Area=${(width * height).toFixed(2)}, Perimeter=${(
+        2 *
+        (width + height)
+      ).toFixed(2)}`,
+  };
 }
 
-// ❌ НАРУШЕНИЕ LSP: Функция должна работать как processRectangle, но работает по-другому
-// 💡 ЧТО НЕ ТАК: Нарушает контракт базовой функции
-// 🎯 РЕЗУЛЬТАТ: Неожиданное поведение для клиентов
-const processCircle: typeof processRectangle = (width: number, height: number) => {
-    // ❌ НАРУШЕНИЕ КОНТРАКТА processRectangle:
-    // 💡 ЧТО НЕ ТАК:
-    //    - width интерпретируется как radius
-    //    - height игнорируется
-    //    - формулы не соответствуют прямоугольнику
-    // 🎯 РЕШЕНИЕ: Создать отдельную функцию для круга
-    const radius = width;
-    return {
-        area: Math.PI * radius * radius,     // ❌ Не width * height
-        perimeter: 2 * Math.PI * radius,     // ❌ Не 2 * (width + height)
-        info: `Circle: radius=${radius}`     // ❌ Не `Rectangle: ${width}x${height}`
-    };
-};
+function createCircle(radius: number): ShapeData {
+  return {
+    getArea: () => Math.PI * radius * radius,
+    getPerimeter: () => 2 * Math.PI * radius,
+    getInfo: () =>
+      `Circle: Area=${(Math.PI * radius * radius).toFixed(2)}, Perimeter=${(
+        2 *
+        Math.PI *
+        radius
+      ).toFixed(2)}`,
+  };
+}
 
-// ❌ НАРУШЕНИЕ LSP: Функция должна работать как processRectangle, но работает по-другому
-// 💡 ЧТО НЕ ТАК: Нарушает контракт базовой функции
-// 🎯 РЕЗУЛЬТАТ: Неожиданное поведение для клиентов
-const processTriangle: typeof processRectangle = (width: number, height: number) => {
-    // ❌ НАРУШЕНИЕ КОНТРАКТА processRectangle:
-    // 💡 ПРОБЛЕМА:
-    //    - width и height интерпретируются как стороны треугольника
-    //    - используется формула Герона вместо простого умножения
-    //    - периметр вычисляется как сумма сторон, а не 2 × (ширина + высота)
-    // 🎯 РЕШЕНИЕ: Создать отдельную функцию для треугольника
-    const side1 = width;
-    const side2 = height;
-    const side3 = width; // Предполагаем равносторонний треугольник
-    
-    const perimeter = side1 + side2 + side3;
-    const s = perimeter / 2; // полупериметр для формулы Герона
-    const area = Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
-    
-    return {
-        area,                              // ❌ Не width * height
-        perimeter,                         // ❌ Не 2 * (width + height)
-        info: `Triangle: sides=${side1},${side2},${side3}` // ❌ Не `Rectangle: ${width}x${height}`
-    };
-};
+function createTriangle(
+  side1: number,
+  side2: number,
+  side3: number
+): ShapeData {
+  return {
+    getArea: () => {
+      const perimeter = side1 + side2 + side3;
+      const s = perimeter / 2;
+      return Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
+    },
+    getPerimeter: () => side1 + side2 + side3,
+    getInfo: () => {
+      const area = (() => {
+        const perimeter = side1 + side2 + side3;
+        const s = perimeter / 2;
+        return Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
+      })();
+      const perimeter = side1 + side2 + side3;
+      return `Triangle: Area=${area.toFixed(2)}, Perimeter=${perimeter.toFixed(
+        2
+      )}`;
+    },
+  };
+}
 
-// ❌ НАРУШЕНИЕ LSP: Функция, которая ожидает функцию с сигнатурой processRectangle, но может сломаться
-// 💡 ЧТО НЕ ТАК: Функция может получить неожиданное поведение от функций-оберток
-// 🎯 РЕЗУЛЬТАТ: Нарушение принципа подстановки Лисков
-function processShapes(processor: typeof processRectangle, shapes: Array<{width: number, height: number}>): {
-    totalArea: number;
-    totalPerimeter: number;
-    infoArray: string[];
+// ✅ Базовая функция-обработчик с широким контрактом
+// 💡 КОНТРАКТ: Принимает любую ShapeData, возвращает стандартную информацию
+// 🎯 ОБЕЩАНИЕ: Работает с любыми ShapeData, никогда не бросает исключений
+function processShape(shape: ShapeData): {
+  info: string;
+  area: number;
+  perimeter: number;
 } {
-    let totalArea = 0;
-    let totalPerimeter = 0;
-    const infoArray: string[] = [];
-    
-    shapes.forEach((shape, index) => {
-        try {
-            // ❌ ПРОБЛЕМА: Код ожидает поведение processRectangle, но получает другое
-            const result = processor(shape.width, shape.height);
-            
-            // ❌ НАРУШЕНИЕ LSP: result.area может быть вычислена по-другому
-            // 💡 ЧТО НЕ ТАК: Ожидается: area = width * height (как в processRectangle)
-            // 🎯 РЕЗУЛЬТАТ: Получается: может быть π * width² (processCircle) или формула Герона (processTriangle)
-            totalArea += result.area;
-            
-            // ❌ НАРУШЕНИЕ LSP: result.perimeter может быть вычислен по-другому
-            // 💡 ЧТО НЕ ТАК: Ожидается: perimeter = 2 * (width + height) (как в processRectangle)
-            // 🎯 РЕЗУЛЬТАТ: Получается: может быть 2π * width (processCircle) или sum(sides) (processTriangle)
-            totalPerimeter += result.perimeter;
-            
-            // ❌ НАРУШЕНИЕ LSP: result.info может иметь другой формат
-            // 💡 ЧТО НЕ ТАК: Ожидается: "Rectangle: widthxheight" (как в processRectangle)
-            // 🎯 РЕЗУЛЬТАТ: Получается: может быть "Circle: radius=X" (processCircle) или "Triangle: sides=X,Y,Z" (processTriangle)
-            infoArray.push(result.info);
-            
-        } catch (error: any) {
-            // ❌ НАРУШЕНИЕ LSP: processSquare может выбросить исключение для неквадратных фигур
-            // 💡 ЧТО НЕ ТАК: Ожидается: функция всегда работает без исключений (как processRectangle)
-            // 🎯 РЕЗУЛЬТАТ: Получается: может выбросить исключение при нарушении контракта
-            infoArray.push(`Error: ${error.message}`);
-        }
-    });
-    
-    return {
-        totalArea,
-        totalPerimeter,
-        infoArray
-    };
+  return {
+    info: shape.getInfo(),
+    area: shape.getArea(),
+    perimeter: shape.getPerimeter(),
+  };
 }
 
-// ❌ ДЕМОНСТРАЦИЯ ПРОБЛЕМ: Неожиданное поведение
-// 💡 ЧТО НЕ ТАК: Функции-обертки не могут заменить базовую функцию
-// 🎯 РЕЗУЛЬТАТ: Нарушение принципа подстановки
-const lspShapes = [
-    { width: 4, height: 6 },  // прямоугольник
-    { width: 5, height: 5 },  // квадрат
-    { width: 3, height: 4 },  // треугольник (стороны 3, 4, 3)
-    { width: 7, height: 3 }   // попытка создать "неквадратный квадрат"
+// ❌ НАРУШЕНИЕ LSP: Функция требует более строгие условия, чем базовая
+// 💡 ЧТО НЕ ТАК: Добавляет дополнительные проверки и ограничения
+// 🎯 РЕЗУЛЬТАТ: Не может заменить processShape для всех валидных входов
+const processOnlyLargeShapes: typeof processShape = (shape: ShapeData) => {
+  const area = shape.getArea();
+
+  // ❌ НАРУШЕНИЕ LSP: Добавляет предусловие, которого нет в базовой функции
+  if (area < 10) {
+    throw new Error("Shape area must be at least 10"); // ❌ Базовая функция любые площади обрабатывает!
+  }
+
+  return {
+    info: shape.getInfo(),
+    area: area,
+    perimeter: shape.getPerimeter(),
+  };
+};
+
+// ❌ НАРУШЕНИЕ LSP: Функция работает только с кругами
+// 💡 ЧТО НЕ ТАК: Сужает предусловия - анализирует содержимое info для определения типа
+// 🎯 РЕЗУЛЬТАТ: Нарушает принцип подстановки Лисков
+const processOnlyCircles: typeof processShape = (shape: ShapeData) => {
+  const info = shape.getInfo();
+
+  // ❌ НАРУШЕНИЕ LSP: Добавляет ограничения на тип фигуры
+  if (!info.startsWith("Circle:")) {
+    throw new Error("Only circles are supported"); // ❌ Базовая функция любые типы обрабатывает!
+  }
+
+  return {
+    info: shape.getInfo(),
+    area: shape.getArea(),
+    perimeter: shape.getPerimeter(),
+  };
+};
+
+// ❌ НАРУШЕНИЕ LSP: Функция меняет формат возвращаемых данных
+// 💡 ЧТО НЕ ТАК: Нарушает постусловия - возвращает неправильную структуру
+// 🎯 РЕЗУЛЬТАТ: Клиенты получают неожиданный формат данных
+const processShapeWithBrokenOutput: typeof processShape = (
+  shape: ShapeData
+) => {
+  // ❌ НАРУШЕНИЕ LSP: Возвращает данные в неправильном формате
+  return {
+    info: "", // ❌ Пустая строка вместо правильной информации
+    area: -1, // ❌ Невозможная отрицательная площадь
+    perimeter: shape.getArea(), // ❌ Возвращает площадь вместо периметра!
+  };
+};
+
+// ❌ НАРУШЕНИЕ LSP: Функция добавляет побочные эффекты
+// 💡 ЧТО НЕ ТАК: Добавляет side effects, которых нет в базовой функции
+// 🎯 РЕЗУЛЬТАТ: Неожиданное поведение при замещении
+const processShapeWithSideEffects: typeof processShape = (shape: ShapeData) => {
+  // ❌ НАРУШЕНИЕ LSP: Добавляет побочные эффекты
+  console.log("LOGGING: Processing shape..."); // ❌ Базовая функция ничего не логирует!
+
+  // ❌ Еще хуже - модификация глобального состояния
+  (globalThis as any).lastProcessedShape = shape; // ❌ Базовая функция чистая!
+
+  return {
+    info: shape.getInfo(),
+    area: shape.getArea(),
+    perimeter: shape.getPerimeter(),
+  };
+};
+
+// ❌ ДЕМОНСТРАЦИЯ ПРОБЛЕМЫ: Функция высшего порядка ломается из-за нарушений LSP
+function processMultipleShapes(
+  processor: typeof processShape,
+  shapes: ShapeData[]
+): { results: string[]; errors: string[]; successCount: number } {
+  const results: string[] = [];
+  const errors: string[] = [];
+  let successCount = 0;
+
+  shapes.forEach((shape, index) => {
+    try {
+      // ❌ ПРОБЛЕМА: Код ожидает поведение processShape
+      const result = processor(shape);
+
+      // ❌ НАРУШЕНИЕ LSP: result.info может быть пустой (processShapeWithBrokenOutput)
+      if (result.info) {
+        results.push(result.info);
+        successCount++;
+      } else {
+        errors.push(`Shape ${index}: Empty info returned`);
+      }
+    } catch (error: any) {
+      // ❌ НАРУШЕНИЕ LSP: Неожиданные исключения
+      errors.push(`Shape ${index}: ${error.message}`);
+    }
+  });
+
+  return { results, errors, successCount };
+}
+
+// ❌ ДЕМОНСТРАЦИЯ НАРУШЕНИЙ: Тестовые данные
+const testShapes: ShapeData[] = [
+  createRectangle(4, 6), // area = 24 (большая)
+  createCircle(1), // area ≈ 3.14 (маленькая)
+  createTriangle(3, 4, 5), // area = 6 (средняя)
+  createRectangle(2, 2), // area = 4 (маленькая)
 ];
 
-// ✅ Базовая функция работает корректно
-const rectangleResult = processShapes(processRectangle, lspShapes);
+// ✅ Базовая функция работает со всеми данными
+const baseResults = processMultipleShapes(processShape, testShapes);
 
-// ❌ НАРУШЕНИЕ LSP: функция-обертка для круга нарушает контракт processRectangle
-// 💡 ЧТО НЕ ТАК: Ожидается: area = width * height, perimeter = 2 * (width + height)
-// 🎯 РЕЗУЛЬТАТ: Получается: area = π * width², perimeter = 2π * width
-const circleResult = processShapes(processCircle, lspShapes);
+// ❌ НАРУШЕНИЕ LSP: processOnlyLargeShapes ломается на маленьких фигурах
+const largeResults = processMultipleShapes(processOnlyLargeShapes, testShapes);
 
-// ❌ НАРУШЕНИЕ LSP: функция-обертка для треугольника нарушает контракт processRectangle
-// 💡 ЧТО НЕ ТАК: Ожидается: area = width * height, perimeter = 2 * (width + height)
-// 🎯 РЕЗУЛЬТАТ: Получается: area = формула Герона, perimeter = sum(sides)
-const triangleResult = processShapes(processTriangle, lspShapes);
+// ❌ НАРУШЕНИЕ LSP: processOnlyCircles ломается на не-кругах
+const circleResults = processMultipleShapes(processOnlyCircles, testShapes);
 
-// ❌ НАРУШЕНИЕ LSP: функция-обертка для квадрата нарушает контракт processRectangle
-// 💡 ЧТО НЕ ТАК: Ожидается: всегда работает без исключений
-// 🎯 РЕЗУЛЬТАТ: Получается: может выбросить исключение для прямоугольников
-const squareResult = processShapes(processSquare, lspShapes);
+// ❌ НАРУШЕНИЕ LSP: processShapeWithBrokenOutput нарушает формат
+const brokenResults = processMultipleShapes(
+  processShapeWithBrokenOutput,
+  testShapes
+);
 
-// 🧪 Юнит‑тест (псевдо): проверка контракта для функций‑заменителей
-// function assertRectangleProcessor(proc: typeof processRectangle) {
-//   const { area, perimeter, info } = proc(4, 6);
-//   if (area !== 24 || perimeter !== 20 || !/^Rectangle: 4x6$/.test(info)) {
-//     throw new Error('Нарушение контракта processRectangle');
-//   }
-// }
-// assertRectangleProcessor(processRectangle); // ✅
-// // assertRectangleProcessor(processCircle);   // ❌ нарушает контракт
-// // assertRectangleProcessor(processTriangle); // ❌ нарушает контракт
+// ❌ НАРУШЕНИЕ LSP: processShapeWithSideEffects добавляет побочные эффекты
+const sideEffectResults = processMultipleShapes(
+  processShapeWithSideEffects,
+  testShapes
+);
 
-export {}
+export {};
